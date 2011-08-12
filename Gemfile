@@ -30,6 +30,7 @@ require 'yaml'
 
 source :gemcutter
 gem 'rails', '3.0.9'
+gem 'hpricot'
 gem 'require_relative'
 gem 'htmlentities'
 gem 'json'
