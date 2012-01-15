@@ -4,6 +4,7 @@ class Page < Content
   validates_uniqueness_of :name
 
   include ConfigManager
+  include Sanitizable
   extend ActiveSupport::Memoizable
   serialize :settings, Hash
 
@@ -28,7 +29,9 @@ class Page < Content
   def self.search_paginate(search_hash, paginate_hash)
     list_function = ["Page"] + function_search_no_draft(search_hash)
     paginate_hash[:order] = 'title ASC'
-    list_function << "paginate(paginate_hash)"
+    list_function << "page(paginate_hash[:page])"
+    list_function << "per(paginate_hash[:per])"
+    
     eval(list_function.join('.'))
   end
 
@@ -53,5 +56,9 @@ class Page < Content
 
   def delete_url
     blog.url_for(:controller => "/admin/pages", :action =>"destroy", :id => id)
+  end
+
+  def satanized_title
+    remove_accents(self.title).gsub(/<[^>]*>/, '').to_url
   end
 end

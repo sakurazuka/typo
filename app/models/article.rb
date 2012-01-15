@@ -55,6 +55,8 @@ class Article < Content
   scope :drafts, :conditions => ['state = ?', 'draft']
   scope :without_parent, {:conditions => {:parent_id => nil}}
   scope :child_of, lambda { |article_id| {:conditions => {:parent_id => article_id}} }
+  scope :published, lambda { { :conditions => { :published => true, :published_at => Time.at(0)..Time.now }, :order => 'published_at DESC' } }
+  scope :published_at, lambda {|time_params| { :conditions => { :published => true, :published_at => Article.time_delta(*time_params) }, :order => 'published_at DESC' } }
 
   setting :password,                   :string, ''
 
@@ -95,14 +97,6 @@ class Article < Content
       article
     end
 
-    def published_articles
-      find(:conditions => { :published => true }, :order => 'published_at DESC')
-    end
-
-    def count_published_articles
-      count(:conditions => { :published => true })
-    end
-
     def search_no_draft_paginate(search_hash, paginate_hash)
       list_function  = ["Article.no_draft"] + function_search_no_draft(search_hash)
 
@@ -111,7 +105,8 @@ class Article < Content
       end
 
       paginate_hash[:order] = 'published_at DESC'
-      list_function << "paginate(paginate_hash)"
+      list_function << "page(paginate_hash[:page])"
+      list_function << "per(paginate_hash[:per])"
       eval(list_function.join('.'))
     end
 
@@ -293,6 +288,15 @@ class Article < Content
     super(:published_at)
   end
 
+  def self.get_or_build_article id = nil
+    return Article.find(id) if id
+    article = Article.new.tap do |art|
+      art.allow_comments = art.blog.default_allow_comments
+      art.allow_pings = art.blog.default_allow_pings
+      art.text_filter = art.blog.text_filter
+    end
+  end
+
   # Finds one article which was posted on a certain date and matches the supplied dashed-title
   # params is a Hash
   def self.find_by_permalink(params)
@@ -327,7 +331,7 @@ class Article < Content
     if !query_s.empty? && args.empty?
       Article.searchstring(query)
     elsif !query_s.empty? && !args.empty?
-      Article.searchstring(query).paginate(args)
+      Article.searchstring(query).page(args[:page]).per(args[:per])
     else
       []
     end
@@ -366,7 +370,7 @@ class Article < Content
   # check if time to comment is open or not
   def in_feedback_window?
     self.blog.sp_article_auto_close.zero? ||
-      self.created_at.to_i > self.blog.sp_article_auto_close.days.ago.to_i
+      self.published_at.to_i > self.blog.sp_article_auto_close.days.ago.to_i
   end
 
   def cast_to_boolean(value)
@@ -474,10 +478,10 @@ class Article < Content
 
   def set_defaults
     if self.attributes.include?("permalink") and
-          (self.permalink.blank? or
-          self.permalink.to_s =~ /article-draft/ or
-          self.state == "draft"
-    )
+      (self.permalink.blank? or
+       self.permalink.to_s =~ /article-draft/ or
+       self.state == "draft"
+      )
       self.permalink = self.stripped_title
     end
     if blog && self.allow_comments.nil?

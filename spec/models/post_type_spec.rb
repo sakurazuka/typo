@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 
 describe PostType do
@@ -15,6 +16,10 @@ describe PostType do
      @pt.permalink.should == 'un-joli-posttype-accentue'
    end
     
+   it 'should have a sanitized permalink with a' do
+     @pt = PostType.create(:name => "Un joli PostType à Accentuer")
+     @pt.permalink.should == 'un-joli-posttype-a-accentuer'
+   end
   end
   
   it 'post types are unique' do

@@ -17,7 +17,6 @@ class Admin::ResourcesController < Admin::BaseController
         @up = Resource.create(:filename => file.original_filename, :mime => mime, :created_at => Time.now)
 
         @up.write_to_disk(file)
-        @up.create_thumbnail
 
         @message = _('File uploaded: ')+ file.size.to_s
         finish_upload_status "'#{@message}'"
@@ -50,12 +49,12 @@ class Admin::ResourcesController < Admin::BaseController
 
   def index
     @r = Resource.new
-    @resources = Resource.paginate :page => params[:page], :order => 'created_at DESC', :per_page => this_blog.admin_display_elements
+    @resources = Resource.order('created_at DESC').page(params[:page]).per(this_blog.admin_display_elements)
   end
 
   def get_thumbnails
     position = params[:position].to_i
-    @resources = Resource.find(:all, :conditions => "mime LIKE '%image%'", :order => 'created_at DESC', :limit => "#{position}, 10")
+    @resources = Resource.without_images.by_created_at.limit("#{position}, 10")
     render 'get_thumbnails', :layout => false
   end
 

@@ -16,8 +16,38 @@ function autosave_request(e) {
 }
 
 Event.observe(window, 'load', function() {
-  $$('.autosave').each(function(e){autosave_request(e)})
+  $$('.autosave').each(function(e){autosave_request(e)});
+  $$('#article_form .new_category').each(function(cat_link){ cat_link.observe('click', bind_new_category_overlay); });
+  $$('.merge_link').each(function(merge_link){ merge_link.observe('click', bind_merge_link); });
 })
+
+// UJS for new category link in admin#new_article
+function bind_new_category_overlay(event) {
+  new Ajax.Request(event.element().readAttribute('href'),
+  {
+    method:'get',
+    onSuccess: function(transport){
+      var response = transport.responseText;
+      Element.insert(document.body, {top: response });
+      window.scrollTo(window.pageXOffset, 0); 
+    },
+    onFailure: function(){ alert('Something went wrong...') }
+  });
+  event.stop();
+}
+
+// JS for merging tags links in admin#tags
+function bind_merge_link(e) {
+  var merger = $('tag_merger');
+  if(!merger) { return; }
+  merger.hide();
+  // Take calling element, then take informations
+  var tag_id = e.element()['id'] + 0;
+  var tag_name = e.element().up(1).previous().text;
+  merger.down('span').update(tag_name);
+  merger.show();
+  e.stop();
+}
 
 // JS QuickTags version 1.3.1
 //
@@ -54,7 +84,7 @@ function edButton(id, display, tagStart, tagEnd, access, open) {
 edButtons.push(
 	new edButton(
 		'ed_bold'
-		,'strong'
+		,'b'
 		,'<strong>'
 		,'</strong>'
 		,'b'
@@ -64,7 +94,7 @@ edButtons.push(
 edButtons.push(
 	new edButton(
 		'ed_italic'
-		,'italic'
+		,'i'
 		,'<em>'
 		,'</em>'
 		,'i'

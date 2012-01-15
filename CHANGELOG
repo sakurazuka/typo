@@ -1,70 +1,114 @@
-commit 21a9a2e83a14a28818294fd2669178e3dc5a8432
-Author: Frédéric de Villamil <neuro@asocial.org>
-
-    Fixes a utf-8 thing with ruby 1.9.2
-
-commit fb6e69add004184d96b3d55d7ea7656d00a08f2c
-Author: Frédéric de Villamil <neuro@asocial.org>
-
-    Forcing will paginate to be 3.0pre2, pre4 is broken
-
-commit a32fdebb1184bb5ec3908f8abf7d5d5f493eaac9
-Author: Frédéric de Villamil <neuro@asocial.org>
-
-    Fixes dashboard taking ages to load.
-
-commit 91157849f399c537dc0b269a0f498c8f8e9cfedf
-Author: Frédéric de Villamil <neuro@asocial.org>
-
-    Fixes pages views with Ruby 1.9.2.
-
-commit 0b05285f7f7eee65247c777ef4e5d9e829fd2949
-Author: Frédéric de Villamil <neuro@asocial.org>
-
-    Fixes articles with an empty post_type.
-
-commit ef4714c889b332243b490a86be21eb965ae59439
-Author: Mathieu Poussin <poussin.mathieu@gmail.com>
-
-    Added the recaptcha tag to non standards templates
-
-commit 04b26a2e533242d5465b708e1b2d165ff91b1ce2
-Author: Yannick Francois <yannick.francois@free.fr>
-
-    remove user fixture usage. Still some tobi usage to replace
-
-commit 01bcb3904cd10d067063292b14fb70fe27d721bb
-Author: Yaf <yannick.francois@free.fr>
-
-    fix spec errors about fixtures...
-
-commit ac617dce0f47da779c8c1461e3b1f2bdd65a088f
-Merge: 01bcb39 ef4714c
+commit 07cd1095848e66d7c847eebbe244890c6ce0e92d
 Author: Frédéric de Villamil <frederic@de-villamil.com>
 
-    Merge pull request #37 from mathieupoussin/master
+    Fixes live search. I'll have to check why we didn't find that one before
 
-commit 534e4135f138ff5cb7c072d8d79f5e6770b56fa5
+commit 48468deb27cecbf5dd50c1a520bb45b443f26691
+Author: Frédéric de Villamil <frederic@de-villamil.com>
+
+    Fixes a bug when displaying a protected article within a category
+
+commit 69ca931d642a4d3db9eae2d1556874df532b8407
+Author: Frédéric de Villamil <frederic@de-villamil.com>
+
+    Fixing issue 42: user creation not working.
+
+commit 717dd9d888b3928154d55d7b4f690ebad5ab0100
 Author: Yannick Francois <yannick.francois@free.fr>
 
-    in the way to removing user spec...
+    remove unused files amd directory in test dir
 
-commit a7638e9ef39e49b243ce5328777531708c6c9bc4
-Author: Frédéric de Villamil <neuro@asocial.org>
-
-    Fixes file upload, at least until we change our model uploader.
-
-commit d569e41ac430a05d00dd8bb6d76e06bd0b541abe
+commit b07892e5a728e0e4179da301496e47474b551211
 Author: Yannick Francois <yannick.francois@free.fr>
 
-    remove user fixture usage
+    remove test dir
 
-commit 97d65d985985b13875f96f9383d99a894cffd3fa
+commit 163e574de1408d5f1fbc66f60ce509b7946c0ec4
+Author: Huy Dinh <mail@huydinh.eu>
+
+    Fixing an obvious "blunder".
+
+commit 8f2f4ecb0d612f4d3b5dd042797cb48420f51b11
+Author: Huy Dinh <mail@huydinh.eu>
+
+    Follow up, missed fixing another example.
+
+commit 5c0c8bd07502b5c3a507f785a47383b8fc44d874
+Author: Thomas Lecavelier <thomas@lecavelier.name>
+
+    First, the simple link for non-js admin (UJS)
+
+commit 260e760f50f4dafcf1598a73e664ad3f73f84f60
+Merge: b07892e 8f2f4ec
+Author: Matijs van Zuijlen <matijs@matijs.net>
+
+    Merge pull request #43 from Skudo/hotfix
+
+commit 0423a97bd490b1eea600bc4dc7b42d61697934e3
+Author: Huy Dinh <mail@huydinh.eu>
+
+    Fixing issue with RedCloth 4.2.7 (see comments in http://blog.typosphere.org/release-of-typo-6-0-6-a-major-one.html).
+
+commit dee03029faec5bf2611e4e67220d87d1b3ab720b
+Author: Yannick Francois <yannick.francois@free.fr>
+
+    create a Satanizable module, remove duplication about clean accents (by move method in satanizable)...
+
+commit 84ccca3fbaba63b0da6af6a1e8b9c935fd39eeb4
+Merge: 260e760 dee0302
+Author: Yannick Francois <yannick.francois@free.fr>
+
+    Merge branch 'remove_accents'
+
+commit 31027227254a252b8b1add4d9311a7ca495982a5
+Author: Huy Dinh <mail@huydinh.eu>
+
+    This fix addresses issue #39: Time.parse apparently hiccups when the timestamp string contains "GMT+0000 (UTC)". Worked around this using fdv's suggestion to use DateTime.strptime.
+
+commit 28623a8d65d8eeecacd5c1daa11e348920ac9e10
+Author: Yannick Francois <yannick.francois@free.fr>
+
+    refactorimg spec to remove duplications (my new job here ? :-p)
+
+commit 508cfd6e5d860f6512adb1881d0037f7d6622f2c
+Merge: 28623a8 0423a97
+Author: Frédéric de Villamil <frederic@de-villamil.com>
+
+    Merge pull request #44 from Skudo/fix/RedCloth
+
+commit cb22ad8c192ad1a509483b309361c35c8d0fa13c
 Author: Frédéric de Villamil <neuro@asocial.org>
 
-    Updating TODO
+    Upgrades to Rails 3.0.10.
 
-commit acad340c0743dfab5fb0ed64ec9cfb9cb3b5c9fd
+commit 6298fcef8ed8909fe4829071fe7df016eeb2a9ea
+Merge: cb22ad8 3102722
+Author: Matijs van Zuijlen <matijs@matijs.net>
+
+    Merge pull request #45 from Skudo/fix/issue_39
+
+commit f56980f25db474d2ea9a6363dfc62a28d4c42615
+Author: Thomas Lecavelier <thomas@lecavelier.name>
+
+    Add Category creation on Content creation page (UJS way). Induced some refactorisation in Categories views and model
+
+commit b8c0ff329f35e537e2ea25b70127a07fb1a3c821
+Merge: f56980f 6298fce
+Author: Thomas Lecavelier <thomas@lecavelier.name>
+
+    Merge branch 'master' of github.com:fdv/typo
+
+commit ae1ae6f35aecb9fc24c3ea8800e37d13f5173a3c
+Author: Thomas Lecavelier <thomas@lecavelier.name>
+
+    Update todo: category creation in Content creation page: Ok, take Tag merging for me
+
+commit 4501658d08c9b2ee74f1c2a085193799742b2084
 Author: Frédéric de Villamil <neuro@asocial.org>
 
-    Forcing mini magick 1.3.3 as mini magick 2.0 and above crash when trying to resize images (WTF?)
+    Fixes a bug where attachment thumbnails would not be created at upload from the editor and API.
+
+commit f587ab8a39c8a723d70ca78bbc8fdf0c177f21b3
+Author: Frédéric de Villamil <neuro@asocial.org>
+
+    Fixing in Ruby 1.9.2

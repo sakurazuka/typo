@@ -10,31 +10,15 @@ class Admin::PagesController < Admin::BaseController
     @pages = Page.search_paginate(@search, :page => params[:page], :per_page => this_blog.admin_display_elements)
   end
 
-  accents = { ['á','à','â','ä','ã','Ã','Ä','Â','À'] => 'a',
-    ['é','è','ê','ë','Ë','É','È','Ê'] => 'e',
-    ['í','ì','î','ï','I','Î','Ì'] => 'i',
-    ['ó','ò','ô','ö','õ','Õ','Ö','Ô','Ò'] => 'o',
-    ['œ'] => 'oe',
-    ['ß'] => 'ss',
-    ['ú','ù','û','ü','U','Û','Ù'] => 'u',
-    ['ç','Ç'] => 'c'
-  }
-
-  FROM, TO = accents.inject(['','']) { |o,(k,v)|
-    o[0] << k * '';
-    o[1] << v * k.size
-    o
-  }
-
   def new
-    @macros = TextFilter.available_filters.select { |filter| TextFilterPlugin::Macro > filter }
+    @macros = TextFilter.macro_filters
     @page = Page.new(params[:page])
     @page.user_id = current_user.id
     @page.text_filter ||= current_user.text_filter
-    @images = Resource.paginate :page => 1, :conditions => "mime LIKE '%image%'", :order => 'created_at DESC', :per_page => 10
+    @images = Resource.where("mime LIKE '%image%'").order('created_at DESC').page(1).per(10)
     if request.post?
       if @page.name.blank?
-        @page.name = @page.title.tr(FROM, TO).gsub(/<[^>]*>/, '').to_url
+        @page.name = @page.satanized_title
       end
       @page.published_at = Time.now
       if @page.save
@@ -46,8 +30,8 @@ class Admin::PagesController < Admin::BaseController
   end
 
   def edit
-    @macros = TextFilter.available_filters.select { |filter| TextFilterPlugin::Macro > filter }
-    @images = Resource.paginate :page => 1, :conditions => "mime LIKE '%image%'", :order => 'created_at DESC', :per_page => 10
+    @macros = TextFilter.macro_filters
+    @images = Resource.where("mime LIKE '%image%'").page(1).order('created_at DESC').per(10)
     @page = Page.find(params[:id])
     @page.attributes = params[:page]
     if request.post? and @page.save
@@ -78,12 +62,14 @@ class Admin::PagesController < Admin::BaseController
     @page.redirects << red
   end
 
+  # TODO Duplicate with Admin::ContentController
   def insert_editor
-    editor = (params[:editor].to_s =~ /simple|visual/) ? params[:editor].to_s : "visual"
+    editor = 'visual'
+    editor = 'simple' if params[:editor].to_s == 'simple'
     current_user.editor = editor
     current_user.save!
 
-    render :partial => "#{params[:editor].to_s}_editor"
+    render :partial => "#{editor}_editor"
   end
 
 end

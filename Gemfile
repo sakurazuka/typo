@@ -25,19 +25,18 @@ else
   end
 end
 
-require 'fileutils'
-require 'yaml'
+source :rubygems
 
 source :gemcutter
-gem 'rails', '3.0.9'
 gem 'hpricot'
+gem 'rails', '3.0.10'
 gem 'require_relative'
 gem 'htmlentities'
 gem 'json'
 gem 'bluecloth', '>= 2.0.5'
 gem 'coderay', '~> 0.9'
-gem 'will_paginate', '3.0.pre2'
-gem 'RedCloth', '4.2.7'
+gem 'kaminari'
+gem 'RedCloth', '4.2.8'
 gem 'addressable', '~> 2.1.0', :require => 'addressable/uri'
 gem 'mini_magick', '1.3.3', :require => 'mini_magick'
 gem 'uuidtools', '~>2.1.1'
@@ -54,7 +53,7 @@ group :development, :test do
   else
     gem 'ruby-debug'
   end
-  gem 'factory_girl'
+  gem 'factory_girl', '2.2.0'
   gem 'webrat'
   gem 'rspec-rails', '>= 2.0.0.beta.20'
   gem 'rcov'

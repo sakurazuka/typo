@@ -4,8 +4,16 @@ class Admin::CategoriesController < Admin::BaseController
   cache_sweeper :blog_sweeper
 
   def index; redirect_to :action => 'new' ; end
-  def new; new_or_edit ; end
   def edit; new_or_edit;  end
+
+  def new 
+    respond_to do |format|
+      format.html { new_or_edit }
+      format.js { 
+        @category = Category.new
+      }
+    end
+  end
 
   def destroy
     @category = Category.find(params[:id])
@@ -13,26 +21,6 @@ class Admin::CategoriesController < Admin::BaseController
       @category.destroy
       redirect_to :action => 'index'
     end
-  end
-
-  def order
-    Category.reorder(params[:category_list])
-    render :nothing => true
-  end
-
-  def asort
-    Category.reorder_alpha
-    category_container
-  end
-
-  def category_container
-    @categories = Category.find(:all, :order => :position)
-    render :partial => "categories"
-  end
-
-  def reorder
-    @categories = Category.find(:all, :order => :position)
-    render :layout => false
   end
 
   private
@@ -47,7 +35,15 @@ class Admin::CategoriesController < Admin::BaseController
                 end
     @category.attributes = params[:category]
     if request.post?
-      save_category
+      respond_to do |format|
+        format.html { save_category }
+        format.js do 
+          @category.save
+          @article = Article.new
+          @article.categories << @category
+          return render(:partial => 'admin/content/categories')
+        end
+      end
       return
     end
     render 'new'
@@ -59,7 +55,7 @@ class Admin::CategoriesController < Admin::BaseController
     else
       flash[:error] = _('Category could not be saved.')
     end
-    redirect_to :action => 'index'
+    redirect_to :action => 'new'
   end
 
 end

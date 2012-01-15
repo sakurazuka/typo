@@ -21,10 +21,10 @@ class ArticlesController < ContentController
 
     unless params[:year].blank?
       @noindex = 1
-      @articles = Article.paginate :page => params[:page], :conditions => { :published_at => time_delta(*params.values_at(:year, :month, :day)), :published => true }, :order => 'published_at DESC', :per_page => @limit
+      @articles = Article.published_at(params.values_at(:year, :month, :day)).page(params[:page]).per(@limit)
     else
       @noindex = 1 unless params[:page].blank?
-      @articles = Article.paginate :page => params[:page], :conditions => ['published = ? AND published_at < ?', true, Time.now], :order => 'published_at DESC', :per_page => @limit
+      @articles = Article.published.page(params[:page]).per(@limit)
     end
 
     @page_title = index_title
@@ -75,7 +75,7 @@ class ArticlesController < ContentController
     return unless request.xhr?
     @article = Article.find(params[:article][:id])
     if @article.password == params[:article][:password]
-      render :partial => 'articles/full_article_content'
+      render :partial => 'articles/full_article_content', :locals => { :article => @article }
     else
       render :partial => 'articles/password_form', :locals => { :article => @article }
     end
@@ -97,7 +97,7 @@ class ArticlesController < ContentController
     r = Redirect.find_by_from_path(from.join("/"))
     return redirect_to r.full_to_path, :status => 301 if r
 
-    render :text => "Page not found", :status => 404
+    render "errors/404", :status => 404
   end
 
 
@@ -137,7 +137,7 @@ class ArticlesController < ContentController
       @keywords = (this_blog.meta_keywords.empty?) ? "" : this_blog.meta_keywords
       @canonical_url = @page.permalink_url
     else
-      render :nothing => true, :status => 404
+      render "errors/404", :status => 404
     end
   end
 
