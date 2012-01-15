@@ -74,6 +74,7 @@ Rails.application.routes.draw do
   match '/setup/confirm', :to => 'setup#confirm', :format => false
 
   # CategoriesController (imitate inflected_resource)
+  match '/category/:id/page/:page.html', :to => 'categories#show', :format => false
   resources :categories, :except => [:show, :update, :destroy, :edit]
   resources :categories, :path => 'category', :only => [:show, :edit, :update, :destroy]
   match '/category/:id/page/:page', :to => 'categories#show', :format => false
