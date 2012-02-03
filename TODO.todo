@@ -3,9 +3,8 @@
 neuro for 6.0.10:
   Editor:
   - Add the media back into the editor.
-  – Change the permalink behavior, that one is definitely stupid. RLY.
   - Fix pagination display
-  
+
   Typogarden:
   - Port : http://typogarden.org/hemingway.html
   - Backport : http://www.lightword-design.com/

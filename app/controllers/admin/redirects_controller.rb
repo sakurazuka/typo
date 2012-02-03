@@ -1,30 +1,24 @@
 class Admin::RedirectsController < Admin::BaseController
   layout 'administration'
 
-  def index
-    @redirects = Redirect.where("origin is null").order('created_at desc').page(params[:page]).per(this_blog.admin_display_elements)
-  end
-
-  def new
-    new_or_edit
-  end
-
-  def edit
-    new_or_edit
-  end
+  def index; redirect_to :action => 'new' ; end
+  def edit; new_or_edit;  end
+  def new; new_or_edit;  end
+    
 
   def destroy
-    @redirect = Redirect.find(params[:id])
-
-    if request.post?
-      @redirect.destroy
-      flash[:notice] = _('Redirection was successfully deleted.')
-      redirect_to :action => 'index'
-    end
+    @record = Redirect.find(params[:id])
+    return(render 'admin/shared/destroy') unless request.post?
+    
+    @record.destroy
+    flash[:notice] = _('Redirection was successfully deleted.')
+    redirect_to :action => 'index'
   end
 
   private
   def new_or_edit
+    @redirects = Redirect.where("origin is null").order('created_at desc').page(params[:page]).per(this_blog.admin_display_elements)
+    
     @redirect = case params[:id]
     when nil
       Redirect.new
