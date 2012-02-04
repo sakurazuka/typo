@@ -40,7 +40,7 @@ class Admin::ContentController < Admin::BaseController
   def destroy
     @record = Article.find(params[:id])
 
-    unless @record.article.access_by?(current_user)
+    unless @record.access_by?(current_user)
       flash[:error] = _("Error, you are not allowed to perform this action")
       return(redirect_to :action => 'index')
     end
@@ -171,7 +171,12 @@ class Admin::ContentController < Admin::BaseController
     if request.post?
       set_article_author
       save_attachments
-      @article.state = "draft" if @article.draft
+      
+      if @article.draft
+        @article.state = "draft"
+      else
+        @article.permalink = @article.stripped_title if @article.permalink.nil? or @article.permalink.empty?
+      end
 
       if @article.save
         destroy_the_draft unless @article.draft
