@@ -10,6 +10,10 @@ describe User do
       Factory.create(:user).should be_valid
       Factory.create(:user).should be_valid
     end
+    
+    it 'salt should not be nil' do
+      User.salt.should == '20ac4d290c2293702c64b3b287ae5ea79b26a5c1'
+    end
   end
 
   context 'With the contents and users fixtures loaded' do
@@ -189,6 +193,12 @@ describe User do
 
     def set_password(newpass)
       @user.password = @user.password_confirmation = newpass
+    end
+  end
+
+  describe "#initialize" do
+    it "accepts a settings field in its parameter hash" do
+      User.new({"firstname" => 'foo'})
     end
   end
 
