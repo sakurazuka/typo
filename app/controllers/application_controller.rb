@@ -29,7 +29,8 @@ class ApplicationController < ActionController::Base
 
   def error(message = "Record not found...", options = { })
     @message = message.to_s
-    render 'articles/error', :status => options[:status] || 404
+    redirect_to "http://t37.net", :status => 301
+    #render 'articles/error', :status => options[:status] || 404
   end
 
   def fire_triggers

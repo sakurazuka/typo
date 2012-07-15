@@ -97,7 +97,7 @@ class ArticlesController < ContentController
     r = Redirect.find_by_from_path(from.join("/"))
     return redirect_to r.full_to_path, :status => 301 if r
 
-    render "errors/404", :status => 404
+    redirect_to "http://t37.net", :status => 301
   end
 
 
