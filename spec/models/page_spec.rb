@@ -11,24 +11,28 @@ end
 
 describe "Testing redirects" do
   it "a new published page gets a redirect" do
+    FactoryGirl.create(:blog)
     a = Page.create(:title => "Some title", :body => "some text", :published => true)
     a.should be_valid
     a.redirects.first.should_not be_nil
     a.redirects.first.to_path.should == a.permalink_url
   end
-    
+
   it "a new unpublished page should not get a redirect" do 
+    FactoryGirl.create(:blog)
+    a = Page.create(:title => "Some title", :body => "some text", :published => true)
     a = Page.create(:title => "Another title", :body => "some text", :published => false)
     a.redirects.first.should be_nil
   end
-    
+
   it "Changin a published article permalink url should only change the to redirection" do
+    FactoryGirl.create(:blog)
     a = Page.create(:title => "Third title", :body => "some text", :published => true)
     a.should be_valid
     a.redirects.first.should_not be_nil
     a.redirects.first.to_path.should == a.permalink_url
     r  = a.redirects.first.from_path
-      
+
     a.name = "some-new-permalink"
     a.save
     a.redirects.first.should_not be_nil
@@ -39,8 +43,8 @@ end
 
 describe 'Given the fixture :first_page' do
   before(:each) do
-    Factory(:blog)
-    @page = Factory(:page)
+    FactoryGirl.create(:blog)
+    @page = FactoryGirl.create(:page)
   end
 
   describe "#permalink_url" do
@@ -54,7 +58,7 @@ describe 'Given the fixture :first_page' do
   end
   
   it "should give a sanitized title" do
-    page = Factory.build(:page, :title => 'title with accents éèà')
+    page = FactoryGirl.build(:page, :title => 'title with accents éèà')
     page.title.to_permalink.should == 'title-with-accents-eea'
   end
 end
@@ -116,7 +120,7 @@ end
 
 describe 'Given a valid page' do
   it 'default filter should be fetched from the blog' do
-    Factory(:blog)
+    FactoryGirl.create(:blog)
     @page = Page.new()
     @page.default_text_filter.name.should == Blog.default.text_filter
   end

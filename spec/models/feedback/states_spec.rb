@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe 'FeedbackStates from Test::Unit' do
+describe Feedback::States do
   before(:each) do
-    Factory(:blog)
-    @comment = Factory(:article).comments.build(:author => 'Piers',
+    FactoryGirl.create(:blog)
+    @comment = FactoryGirl.create(:article).comments.build(:author => 'Piers',
                                                   :body => 'Body')
   end
 
