@@ -5,10 +5,6 @@ def some_user
   User.find(:first) || FactoryGirl.create(:user)
 end
 
-def some_article
-  Article.find(:first) || FactoryGirl.create(:article)
-end
-
 # Factory definitions
 FactoryGirl.define do
   sequence :name do |n|
@@ -17,6 +13,10 @@ FactoryGirl.define do
 
   sequence :user do |n|
     "user#{n}"
+  end
+
+  sequence :email do |n|
+    "user#{n}@example.com"
   end
 
   sequence :guid do |n|
@@ -41,32 +41,35 @@ FactoryGirl.define do
     basetime - n
   end
 
-  factory :user do |u|
-    u.login { FactoryGirl.generate(:user) }
-    u.email { FactoryGirl.generate(:user) }
-    u.name 'Bond'
-    u.notify_via_email false
-    u.notify_on_new_articles false
-    u.notify_on_comments false
-    u.password 'top-secret'
-    u.settings({})
-    u.state 'active'
-    u.profile {FactoryGirl.create(:profile)}
-    u.text_filter {FactoryGirl.create(:textile)}
+  factory :user do
+    login { FactoryGirl.generate(:user) }
+    email { generate(:email) }
+    name 'Bond'
+    notify_via_email false
+    notify_on_new_articles false
+    notify_on_comments false
+    password 'top-secret'
+    settings({})
+    state 'active'
+    profile
+    association :text_filter, factory: :textile
   end
 
-  factory :article do |a|
-    a.title 'A big article'
-    a.body 'A content with several data'
-    a.extended 'extended content for fun'
-    a.guid { FactoryGirl.generate(:guid) }
-    a.permalink 'a-big-article'
-    a.published_at '2005-01-01 02:00:00'
-    a.updated_at { FactoryGirl.generate(:time) }
-    a.user { some_user }
-    a.allow_comments true
-    a.published true
-    a.allow_pings true
+  factory :article do
+    title 'A big article'
+    body 'A content with several data'
+    extended 'extended content for fun'
+    guid
+    permalink 'a-big-article'
+    published_at '2005-01-01 02:00:00'
+    user
+    categories []
+    tags []
+    published_comments []
+    published_trackbacks []
+    allow_comments true
+    published true
+    allow_pings true
   end
 
   factory :unpublished_article, :parent => :article do |a|
@@ -74,17 +77,24 @@ FactoryGirl.define do
     a.published false
   end
 
+  factory :content do
+  end
+
   factory :post_type do |p|
     p.name 'foobar'
     p.description "Some description"
   end
 
-  factory :markdown, :class => :text_filter do |m|
-    m.name "markdown"
-    m.description "Markdown"
-    m.markup 'markdown'
-    m.filters '--- []'
-    m.params '--- {}'
+  factory :markdown, :class => :text_filter do
+    name "markdown"
+    description "Markdown"
+    markup 'markdown'
+    filters '--- []'
+    params '--- {}'
+
+    after :stub do |filter|
+      TextFilter.stub(:find_by_name).with(filter.name) { filter }
+    end
   end
 
   factory :smartypants, :parent => :markdown do |m|
@@ -108,9 +118,13 @@ FactoryGirl.define do
   end
 
   factory :none, :parent => :markdown do |m|
-    m.name "none"
-    m.description "None"
-    m.markup 'none'
+    name "none"
+    description "None"
+    markup 'none'
+
+    after :stub do |filter|
+      TextFilter.stub(:find_by_name).with('') { nil }
+    end
   end
 
   factory :utf8article, :parent => :article do |u|
@@ -130,29 +144,36 @@ FactoryGirl.define do
     a.published_at Time.now - 2.seconds
   end
 
-  factory :blog do |b|
-    b.base_url 'http://myblog.net'
-    b.hide_extended_on_rss true
-    b.blog_name 'test blog'
-    b.limit_article_display 2
-    b.sp_url_limit 3
-    b.plugin_avatar ''
-    b.blog_subtitle "test subtitles"
-    b.limit_rss_display 10
-    b.ping_urls "http://ping.example.com/ping http://alsoping.example.com/rpc/ping"
-    b.geourl_location ""
-    b.default_allow_pings false
-    b.send_outbound_pings false
-    b.sp_global true
-    b.default_allow_comments true
-    b.email_from "scott@sigkill.org"
-    b.theme "typographic"
-    b.text_filter FactoryGirl.create(:textile).name
-    b.sp_article_auto_close 0
-    b.link_to_author false
-    b.comment_text_filter FactoryGirl.create(:markdown).name
-    b.permalink_format "/%year%/%month%/%day%/%title%"
-    b.use_canonical_url true
+  factory :blog do
+    base_url 'http://myblog.net'
+    hide_extended_on_rss true
+    blog_name 'test blog'
+    limit_article_display 2
+    sp_url_limit 3
+    plugin_avatar ''
+    blog_subtitle "test subtitles"
+    limit_rss_display 10
+    ping_urls "http://ping.example.com/ping http://alsoping.example.com/rpc/ping"
+    geourl_location ""
+    default_allow_pings false
+    send_outbound_pings false
+    sp_global true
+    default_allow_comments true
+    email_from "scott@sigkill.org"
+    theme "typographic"
+    association :text_filter, factory: :textile
+    sp_article_auto_close 0
+    link_to_author false
+    comment_text_filter "markdown" #FactoryGirl.create(:markdown).name
+    permalink_format "/%year%/%month%/%day%/%title%"
+    use_canonical_url true
+
+    after :stub do |blog|
+      Blog.stub(:default) { blog }
+      [blog.text_filter, blog.comment_text_filter].uniq.each do |filter|
+        build_stubbed filter
+      end
+    end
   end
 
   factory :profile, :class => :profile do |l|
@@ -198,18 +219,18 @@ FactoryGirl.define do
     r.to_path '/someplace/else'
   end
 
-  factory :comment do |c|
-    c.published true
-    c.article { some_article }
-    c.text_filter {FactoryGirl.create(:textile)}
-    c.author 'Bob Foo'
-    c.url 'http://fakeurl.com'
-    c.body 'Test <a href="http://fakeurl.co.uk">body</a>'
-    c.created_at '2005-01-01 02:00:00'
-    c.updated_at '2005-01-01 02:00:00'
-    c.published_at '2005-01-01 02:00:00'
-    c.guid '12313123123123123'
-    c.state 'ham'
+  factory :comment do
+    published true
+    article
+    text_filter {FactoryGirl.create(:textile)}
+    author 'Bob Foo'
+    url 'http://fakeurl.com'
+    body 'Test <a href="http://fakeurl.co.uk">body</a>'
+    created_at '2005-01-01 02:00:00'
+    updated_at '2005-01-01 02:00:00'
+    published_at '2005-01-01 02:00:00'
+    guid
+    state 'ham'
   end
 
   factory :spam_comment, :parent => :comment do |c|
@@ -230,16 +251,16 @@ FactoryGirl.define do
   end
 
   factory :trackback do |t|
-    t.published true
-    t.state 'ham'
-    t.article { some_article }
-    t.status_confirmed true
-    t.blog_name 'Trackback Blog'
-    t.title 'Trackback Entry'
-    t.url 'http://www.example.com'
-    t.excerpt 'This is an excerpt'
-    t.guid 'dsafsadffsdsf'
-    t.created_at Time.now
-    t.updated_at Time.now
+    published true
+    state 'ham'
+    article
+    status_confirmed true
+    blog_name 'Trackback Blog'
+    title 'Trackback Entry'
+    url 'http://www.example.com'
+    excerpt 'This is an excerpt'
+    guid 'dsafsadffsdsf'
+    created_at Time.now
+    updated_at Time.now
   end
 end

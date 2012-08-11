@@ -15,6 +15,10 @@ class User
   def send_create_notification; end
 end
 
+class ActionView::TestCase::TestController
+  include Rails.application.routes.url_helpers
+end
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
@@ -36,6 +40,9 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
   config.fixture_path = "#{::Rails.root}/test/fixtures"
+
+  # shortcuts for factory_girl to use: create / build / build_stubbed
+  config.include FactoryGirl::Syntax::Methods
 
   config.before(:each) do
     Localization.lang = :default
@@ -83,10 +90,7 @@ def assert_rss20 feed, count
 end
 
 def stub_default_blog
-  blog = stub_model(Blog, :base_url => "http://myblog.net")
-  view.stub(:this_blog) { blog }
-  Blog.stub(:default) { blog }
-  blog
+  FactoryGirl.build_stubbed :blog
 end
 
 def stub_full_article(time=Time.now)
@@ -103,6 +107,19 @@ def stub_full_article(time=Time.now)
   a.stub(:tags) { [FactoryGirl.build(:tag)] }
   a.stub(:text_filter) { text_filter }
   a
+end
+
+def stub_pagination collection, attributes = {}
+  length = collection.length
+  per_page = attributes[:per_page] || 25
+  num_pages = length / per_page + (length % per_page == 0 ? 0 : 1)
+
+  attributes = attributes.reverse_merge current_page: 1, num_pages: num_pages,
+    total_count: length, limit_value: per_page
+  attributes.each do |key, value|
+    collection.stub(key).and_return value
+  end
+  collection
 end
 
 # test standard view and all themes

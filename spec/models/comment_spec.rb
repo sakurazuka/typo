@@ -1,8 +1,12 @@
 require 'spec_helper'
 
 describe Comment do
+  before(:each) do
+    @blog = stub_default_blog
+  end
+
   def published_article
-    FactoryGirl.create(:article, :published_at => Time.now - 1.hour)
+    FactoryGirl.build_stubbed(:article, :published_at => Time.now - 1.hour)
   end
 
   def valid_comment(options={})
@@ -14,37 +18,34 @@ describe Comment do
 
   describe '#permalink_url' do
     before(:each) do
-      FactoryGirl.create(:blog)
-      @c = FactoryGirl.create(:comment, :article => FactoryGirl.create(:article,
-        :permalink => 'inactive-article',
-        :published_at => Date.new(2004, 5, 1).to_datetime))
+      @c = FactoryGirl.build_stubbed(:comment)
     end
 
     subject { @c.permalink_url }
 
     it 'should render permalink to comment in public part' do
-      should == "http://myblog.net/2004/05/01/inactive-article#comment-#{@c.id}"
+      should == "#{@c.article.permalink_url}#comment-#{@c.id}"
     end
   end
 
   describe '#edit_url' do
     it 'should get a url where edit comment in admin' do
-      FactoryGirl.create(:blog)
-      c = FactoryGirl.create(:comment)
+      c = FactoryGirl.build_stubbed(:comment)
       assert_equal "http://myblog.net/admin/comments/edit/#{c.id}", c.edit_url
     end
   end
 
   describe '#delete_url' do
     it 'should get the delete url of comment in admin part' do
-      FactoryGirl.create(:blog)
-      c = FactoryGirl.create(:comment)
+      c = FactoryGirl.build_stubbed(:comment)
       assert_equal "http://myblog.net/admin/comments/destroy/#{c.id}", c.delete_url
     end
   end
 
   describe '#save' do
-    before(:each) { FactoryGirl.create(:blog, :sp_article_auto_close => 300) }
+    before(:each) {
+      @blog.stub(:sp_article_auto_close) { 300 }
+    }
     it 'should save good comment' do
       c = FactoryGirl.build(:comment, :url => "http://www.google.de", :article => published_article)
       assert c.save
@@ -67,7 +68,9 @@ describe Comment do
     end
 
     it 'should change old comment' do
-      c = FactoryGirl.build(:comment, :body => 'Comment body <em>italic</em> <strong>bold</strong>', :article => published_article)
+      c = FactoryGirl.build(:comment,
+                            :body => 'Comment body <em>italic</em> <strong>bold</strong>',
+                            :article => published_article)
       assert c.save
       assert c.errors.empty?
     end
@@ -79,11 +82,9 @@ describe Comment do
     end
 
     it 'should not save with article not allow comment'  do
-      b = Blog.default
-      b.sp_article_auto_close = 1
-      b.save
+      @blog.stub(:sp_article_auto_close) { 1 }
 
-      c = FactoryGirl.build(:comment, :article => FactoryGirl.create(:article, :allow_comments => false))
+      c = FactoryGirl.build(:comment, :article => FactoryGirl.build_stubbed(:article, :allow_comments => false))
       c.save.should_not be_true
       c.errors.should_not be_empty
     end
@@ -91,10 +92,6 @@ describe Comment do
   end
 
   describe '#create' do
-    before do
-      FactoryGirl.create(:blog)
-    end
-
     it 'should create comment' do
       c = valid_comment
       assert c.save
@@ -121,10 +118,6 @@ describe Comment do
   end
 
   describe '#spam?' do
-    before(:each) do
-      FactoryGirl.create(:blog)
-    end
-
     it 'should reject spam rbl' do
       c = valid_comment(:author => "Spammer",
                         :body => %{This is just some random text. &lt;a href="http://chinaaircatering.com"&gt;without any senses.&lt;/a&gt;. Please disregard.},
@@ -155,27 +148,28 @@ describe Comment do
   end
 
   it 'should have good relation' do
-    article = FactoryGirl.build(:article)
-    comment = FactoryGirl.build(:comment, :article => article)
+    article = FactoryGirl.build_stubbed(:article)
+    comment = FactoryGirl.build_stubbed(:comment, :article => article)
     assert comment.article
     assert_equal article, comment.article
   end
 
   describe 'reject xss' do
     before(:each) do
-      FactoryGirl.create(:blog)
       @comment = Comment.new do |c|
         c.body = "Test foo <script>do_evil();</script>"
         c.author = 'Bob'
-        c.article_id = FactoryGirl.create(:article).id
+        c.article = build_stubbed(:article)
       end
     end
     ['','textile','markdown','smartypants','markdown smartypants'].each do |filter|
       it "should reject with filter '#{filter}'" do
-        Blog.default.comment_text_filter = filter
+        # XXX: This makes sure text filter can be 'found' in the database
+        # FIXME: TextFilter objects should not be in the database!
+        sym = filter.empty? ? :none : filter.to_sym
+        build_stubbed sym
 
-        assert @comment.save
-        assert @comment.errors.empty?
+        Blog.default.comment_text_filter = filter
 
         assert @comment.html(:body) !~ /<script>/
       end
@@ -183,43 +177,16 @@ describe Comment do
   end
 
   describe 'change state' do
-    before(:each) do
-      FactoryGirl.create(:blog)
-    end
-
-    it 'should becomes withdraw' do
-      c = FactoryGirl.create(:comment)
+    it 'should become unpublished if withdrawn' do
+      c = FactoryGirl.build_stubbed :comment, :published => true, :published_at => Time.now
       assert c.withdraw!
       assert ! c.published?
       assert c.spam?
       assert c.status_confirmed?
-      c.reload
-      assert ! c.published?
-      assert c.spam?
-      assert c.status_confirmed?
-    end
-
-    it 'should becomes not published in article if withdraw' do
-      a = Article.new(:title => 'foo')
-      assert a.save
-
-      assert_equal 0, a.published_comments.size
-      c = a.comments.build(:body => 'foo', :author => 'bob', :published => true, :published_at => Time.now)
-      assert c.save
-      assert c.published?
-      c.reload
-      a.reload
-
-      assert_equal 1, a.published_comments.size
-      c.withdraw!
-
-      a = Article.new(:title => 'foo')
-      assert_equal 0, a.published_comments.size
     end
 
     it 'should becomes confirmed if withdrawn' do
-      a = FactoryGirl.create(:article)
-      unconfirmed = FactoryGirl.create(:comment, :article => a, :state => 'presumed_ham')
+      unconfirmed = FactoryGirl.build_stubbed(:comment, :state => 'presumed_ham')
       unconfirmed.should_not be_status_confirmed
       unconfirmed.withdraw!
       unconfirmed.should be_status_confirmed
@@ -227,25 +194,24 @@ describe Comment do
   end
 
   it 'should have good default filter' do
-    FactoryGirl.create(:blog, :comment_text_filter => FactoryGirl.create(:markdown))
-    a = FactoryGirl.build(:comment)
+    @blog.stub(:text_filter_object) { FactoryGirl.build_stubbed :textile }
+    @blog.stub(:comment_text_filter) { FactoryGirl.build_stubbed :markdown }
+    a = FactoryGirl.build_stubbed(:comment)
     assert_equal 'markdown', a.default_text_filter.name
   end
 
   describe 'with feedback moderation enabled' do
     before(:each) do
-      @blog = FactoryGirl.create(:blog,
-        :sp_global => false,
-        :default_moderate_comments => true)
+      @blog.stub(:sp_global) { false }
+      @blog.stub(:default_moderate_comments) { true }
     end
 
-    it 'should save comment as presumably spam' do
+    it 'should mark comment as presumably spam' do
       comment = Comment.new do |c|
         c.body = "Test foo"
         c.author = 'Bob'
-        c.article_id = FactoryGirl.create(:article).id
+        c.article = FactoryGirl.build_stubbed(:article)
       end
-      assert comment.save!
 
       assert ! comment.published?
       assert comment.spam?
@@ -253,14 +219,12 @@ describe Comment do
     end
 
     it 'should save comment as confirmed ham' do
-      henri = FactoryGirl.create(:user, :login => 'henri')
       comment = Comment.new do |c|
         c.body = "Test foo"
         c.author = 'Henri'
-        c.article_id = FactoryGirl.create(:article).id
-        c.user_id = henri.id
+        c.article = FactoryGirl.build_stubbed(:article)
+        c.user = FactoryGirl.build_stubbed(:user)
       end
-      assert comment.save!
 
       assert comment.published?
       assert comment.ham?
