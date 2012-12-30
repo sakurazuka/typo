@@ -14,8 +14,8 @@ describe ApplicationHelper do
     end
 
     it 'should render the notice and error flash' do
-      flash[:notice] = 'good update'
-      flash[:error] = "it's not good"
+      flash[:notice] = 'good update'.html_safe
+      flash[:error] = "it's not good".html_safe
       render_flash.split("<br />\n").sort.should == ['<span class="error">it\'s not good</span>','<span class="notice">good update</span>']
     end
   end
@@ -54,6 +54,34 @@ describe ApplicationHelper do
         @blog.time_format = spec
         display_time(@article.published_at).should == @article.published_at.strftime(spec)
       end
+    end
+  end
+
+  describe "stop_index_robots?" do
+    it "returns false by default" do
+      helper.stop_index_robots?.should be_false
+    end
+
+    it "returns true when params[:year] present" do
+      params[:year] = 2010
+      helper.stop_index_robots?.should be_true
+    end
+
+    it "returns true when params[:page] present" do
+      params[:page] = 2
+      helper.stop_index_robots?.should be_true
+    end
+
+    it "returns true when controller is tags and blog configure to unindex tags page" do
+      Blog.any_instance.should_receive(:unindex_tags).and_return(true)
+      helper.stub(:controller_name).and_return("tags")
+      helper.stop_index_robots?.should be_true
+    end
+
+    it "returns true when controller is tags and blog configure to unindex tags page" do
+      Blog.any_instance.should_receive(:unindex_categories).and_return(true)
+      helper.stub(:controller_name).and_return("categories")
+      helper.stop_index_robots?.should be_true
     end
   end
 end

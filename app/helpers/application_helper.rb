@@ -36,9 +36,6 @@ module ApplicationHelper
     link_to_permalink(article,pluralize(comment_count, _('no comments'), _('1 comment'), _('%d comments', comment_count)),'comments')
   end
 
-  # wrapper for TypoPlugins::Avatar
-  # options is a hash which should contain :email and :url for the plugin
-  # (gravatar will use :email, pavatar will use :url, etc.)
   def avatar_tag(options = {})
     avatar_class = this_blog.plugin_avatar.constantize
     return '' unless avatar_class.respond_to?(:get_avatar)
@@ -52,14 +49,6 @@ module ApplicationHelper
 
   def meta_tag(name, value)
     tag :meta, :name => name, :content => value unless value.blank?
-  end
-
-  def date(date)
-    "<span class=\"typo_date\">" + date.utc.strftime(_("%%d. %%b", date.utc)) + "</span>"
-  end
-
-  def toggle_effect(domid, true_effect, true_opts, false_effect, false_opts)
-    "$('#{domid}').style.display == 'none' ? new #{false_effect}('#{domid}', {#{false_opts}}) : new #{true_effect}('#{domid}', {#{true_opts}}); return false;"
   end
 
   def markup_help_popup(markup, text)
@@ -97,24 +86,13 @@ module ApplicationHelper
     tag
   end
 
-  def render_flash
-    output = []
-
-    for key,value in flash
-      output << "<span class=\"#{key.to_s.downcase}\">#{h(value)}</span>"
-    end if flash
-
-    output.join("<br />\n")
-  end
-
   def feed_title
-    case
-    when @feed_title
-      return @feed_title
-    when (@page_title and not @page_title.blank?)
-      return "#{this_blog.blog_name} : #{@page_title}"
+    if @feed_title.present?
+      @feed_title
+    elsif @page_title.present?
+      "#{this_blog.blog_name} : #{@page_title}"
     else
-      return this_blog.blog_name
+      this_blog.blog_name
     end
   end
 
@@ -147,10 +125,6 @@ module ApplicationHelper
     end
   end
 
-  def javascript_include_lang
-    javascript_include_tag "lang/#{Localization.lang.to_s}" if File.exists? File.join(::Rails.root.to_s, 'public', 'lang', Localization.lang.to_s)
-  end
-
   def use_canonical
     "<link rel='canonical' href='#{@canonical_url}' />".html_safe unless @canonical_url.nil?
   end
@@ -172,28 +146,11 @@ module ApplicationHelper
   end
 
   def feed_atom
-    if params[:action] == 'search'
-      url_for(:only_path => false, :format => 'atom', :q => params[:q])
-    elsif not @article.nil?
-      @article.feed_url(:atom)
-    elsif not @auto_discovery_url_atom.nil?
-      @auto_discovery_url_atom
-    else
-      # FIXME: When is this invoked?
-      url_for(:only_path => false, :format => 'atom')
-    end
+    feed_for('atom')
   end
 
   def feed_rss
-    if params[:action] == 'search'
-      url_for(:only_path => false, :format => 'rss', :q => params[:q])
-    elsif not @article.nil?
-      @article.feed_url(:rss20)
-    elsif not @auto_discovery_url_rss.nil?
-      @auto_discovery_url_rss
-    else
-      url_for(:only_path => false, :format => 'rss')
-    end
+    feed_for('rss')
   end
 
   def render_the_flash
@@ -237,34 +194,40 @@ module ApplicationHelper
     "#{display_date(timestamp)} #{_('at')} #{display_time(timestamp)}"
   end
 
-  def js_distance_of_time_in_words_to_now(date)
-    display_date_and_time date
-  end
-
   def show_meta_keyword
     return unless this_blog.use_meta_keyword
     meta_tag 'keywords', @keywords unless @keywords.blank?
-  end
-
-  def show_menu_for_post_type(posttype, before='<li>', after='</li>')
-    list = Article.find(:all, :conditions => ['post_type = ?', post_type])
-    html = ''
-    
-    return if list.size.zero?
-    list.each do |item|
-      html << before
-      html << link_to_permalink(item, item.title)
-      html << after
-    end
-    
-    html
   end
 
   def this_blog
     @blog ||= Blog.default
   end
 
-  def will_paginate(items, params = {})
-    paginate(items, params)
+  def stop_index_robots?
+    stop = (params[:year].present? || params[:page].present?)
+    stop = @blog.unindex_tags if controller_name == "tags"
+    stop = @blog.unindex_categories if controller_name == "categories"
+    stop
   end
+
+  private
+
+  def feed_for(type)
+    if params[:action] == 'search'
+      url_for(only_path: false, format: type, q: params[:q])
+    elsif not @article.nil?
+      @article.feed_url(type)
+    elsif not @auto_discovery_url_atom.nil?
+      instance_variable_get("@auto_discovery_url_#{type}")
+    end
+  end
+
+  def render_flash
+    output = []
+    for key,value in flash
+      output << "<span class=\"#{key.to_s.downcase}\">#{h(value)}</span>"
+    end if flash
+    output.join("<br />\n")
+  end
+
 end
