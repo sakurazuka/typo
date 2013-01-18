@@ -88,6 +88,9 @@ Localization.define("nl_NL") do |l|
   l.store "Delete content", "Verwijder inhoud"
   l.store "Are you sure?", "Weet je het zeker?"
   l.store "Please select", "Selecteren alstublieft"
+  l.store "All categories", ""
+  l.store "All authors", ""
+  l.store "All published dates", ""
   l.store "There are no %s yet. Why don't you start and create one?", "Er zijn nog geen %s. Waarom begin je er niet een te maken?"
   l.store "or", "of"
   l.store "Save", "Bewaar"
@@ -214,7 +217,16 @@ Localization.define("nl_NL") do |l|
   l.store "Permalink", "Permalink"
   l.store "Article filter", "Artikel filter"
   l.store "Save as draft", "Opslaan als concept"
-
+  l.store "New article", ""
+  l.store "disabled", ""
+  l.store "Markdown with SmartyPants", ""
+  l.store "Markdown", ""
+  l.store "Texttile", ""
+  l.store "None", ""
+  l.store "SmartyPants", ""
+  l.store "Visual", ""
+  l.store "Edit article", ""
+  
   # app/views/admin/content/destroy.html.erb
   l.store "Are you sure you want to delete this article", "Weet je zeker dat je dit artikel wilt verwijderen?"
   l.store "Delete this article", "Verwijder dit artikel"
@@ -229,6 +241,9 @@ Localization.define("nl_NL") do |l|
   l.store "Feedback", "Feedback"
   l.store "Filter", "Filter"
   l.store "Manage articles", "Beheer artikelen"
+  l.store "Select a category", ""
+  l.store "Select an author", ""
+  l.store "Publication date", ""
 
   # app/views/admin/dashboard/_comments.html.erb
   l.store "Latest Comments", "Laatste reacties"
@@ -344,11 +359,13 @@ Localization.define("nl_NL") do |l|
 
   # app/views/admin/resources/index.html.erb
   l.store "Filename", "Bestandsnaam"
+  l.store "Browse", ""
 
   # app/views/admin/settings/_submit.html.erb
   l.store "Update settings", "Werk instellingen bij"
 
   # app/views/admin/settings/feedback.html.erb
+  l.store "Spam protection", ""
   l.store "Enable comments by default", "Commentaren standaard toestaan"
   l.store "Enable Trackbacks by default", "Trackbacks standaard toestaan"
   l.store "Enable feedback moderation", "Feedback controle aanzetten"
@@ -408,7 +425,7 @@ Localization.define("nl_NL") do |l|
   l.store "You robots.txt file is not writeable. Typo won't be able to write it", "Je robots.txt bestand is niet schrijfbaar. Typo kan het niet wijzigen"
   l.store "Search Engine Optimization", "Zoekmachine optimalisatie"
   l.store "This will display", "Dit zorgt er voor dat "
-  l.store "at the bottom of each of your post in the RSS feed", " onderaan elke post in je RSS-feed verschijnt"
+  l.store "at the bottom of each post in the RSS feed", " onderaan elke post in je RSS-feed verschijnt"
 
   # app/views/admin/settings/update_database.html.erb
   l.store "Information", "Informatie"
@@ -446,6 +463,21 @@ Localization.define("nl_NL") do |l|
   l.store "Get more plugins", "Haal meer thema's op"
   l.store "Sidebar", "Zijbalk"
   l.store "Publish changes", "Publiceer wijzigingen"
+  l.store "Adds sidebar links to any amazon books linked in the body of the page", ""
+  l.store "Displays links to monthly archives", ""
+  l.store "Displays a list of authors ordered by name with links to their articles and profile", ""
+  l.store "Livesearch", ""
+  l.store "Adds livesearch to your Typo blog", ""
+  l.store "This widget just displays links to Typo main site, this blog's admin and RSS.", ""
+  l.store "Page", ""
+  l.store "Show pages for this blog", ""
+  l.store "Adds basic search sidebar in your Typo blog", ""
+  l.store "Static", ""
+  l.store "Static content, like links to other sites, advertisements, or blog meta-information", ""
+  l.store "Show most popular tags for this blog", ""
+  l.store "RSS and Atom feeds", ""
+  l.store "XML Syndication", ""
+  l.store "remove", "supprimer"
 
   # app/views/admin/tags/_form.html.erb
   l.store "Display name", "Schermnaam"
@@ -470,6 +502,7 @@ Localization.define("nl_NL") do |l|
   l.store "Theme editor", "Thema editor"
 
   # app/views/admin/themes/index.html.erb
+  l.store "Choose theme", ""
   l.store "Active theme", "Actieve thema's"
   l.store "Get more themes", "Haal meer thema's op"
   l.store "You can download third party themes from officially supported %s ", "Je kunt thema's van derden downloaden van officieel ondersteunde %s "
@@ -522,7 +555,8 @@ Localization.define("nl_NL") do |l|
   l.store "Comments", "Reacties"
   l.store "State", "Status"
   l.store "%s user", "%s gebruiker"
-
+  l.store "Manage users", ""
+  
   # app/views/admin/users/new.html.erb
   l.store "Add User", "Gebruiker toevoegen"
 
