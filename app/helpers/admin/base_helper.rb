@@ -2,20 +2,17 @@ module Admin::BaseHelper
   include ActionView::Helpers::DateHelper
 
   def subtabs_for(current_module)
-    output = []
-    AccessControl.project_module(current_user.profile_label, current_module).submenus.each_with_index do |m,i|
-      next if m.name.empty?
-      current =
-      output << subtab(_(m.name), (m.url[:controller] == params[:controller] && m.url[:action] == params[:action]) ? '' : m.url)
+    output = ""
+    AccessControl.submenus_for(current_user.profile_label, current_module).each do |m|
+      if m.current_url?(params[:controller], params[:action])
+        output << content_tag(:li, link_to(_(m.name), '#'), class: 'active')
+      else
+        output << content_tag(:li, link_to(_(m.name), m.url))
+      end
     end
-    output.join("\n").html_safe
+    output
   end
   
-  def subtab(label, options = {})
-    return content_tag :li, link_to(label, '#'), :class => 'active' if options.empty?
-    content_tag :li, link_to(label, options) 
-  end
-
   def show_page_heading
     return if @page_heading.nil? or @page_heading.blank?
     heading = "<div class='page-header'>"
@@ -83,9 +80,8 @@ module Admin::BaseHelper
   end
 
   def render_void_table(size, cols)
-    if size == 0
-      "<tr>\n<td colspan=#{cols}>" + _("There are no %s yet. Why don't you start and create one?", _(controller.controller_name)) + "</td>\n</tr>\n"
-    end
+    return unless size == 0
+    "<tr>\n<td colspan=#{cols}>" + _("There are no %s yet. Why don't you start and create one?", _(controller.controller_name)) + "</td>\n</tr>\n"
   end
 
   def cancel_or_save(message=_("Save"))
@@ -172,6 +168,7 @@ module Admin::BaseHelper
   end
 
   def display_pagination(collection, cols, first='', last='')
+    return if collection.count == 0
     "<tr><td class='#{first} #{last}' colspan=#{cols} class='paginate'>#{paginate(collection)}</td></tr>"
   end
 
