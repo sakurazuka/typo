@@ -26,6 +26,8 @@ Localization.define("fr_FR") do |l|
   l.store "Article was successfully updated.", "Cet article a été mis à jour avec succès"
 
   # app/controllers/admin/dashboard_controller.rb
+  l.store "Error: can't generate secret token. Security is at risk. Please, change %s content", "Erreur : nous n'avons pas pu générer le jeton secret. La sécurité de votre blog est à risque. Veuillez changer le contenu du fichier %s."
+  l.store "For security reasons, you should restart your Typo application. Enjoy your blogging experience.", "Pour des raisons de sécurité, merci de redémarrer votre blog Typo. Bonne expérience de blogging !"
   l.store "You are late from at least one major version of Typo. You should upgrade immediately. Download and install %s", "Vous avez au moins une version majeure de Typo de retard. Vous devriez immédiatement vous mettre à jour. Téléchargez et installez %s" 
   l.store "the latest Typo version", "la dernière version de Typo"
   l.store "There's a new version of Typo available which may contain important bug fixes. Why don't you upgrade to %s ?", "Une nouvelle version de Typo est disponible. Celle-ci contient probablement d'importants correctifs. Pourquoi ne téléchargeriez-vous pas %s"
@@ -257,12 +259,13 @@ Localization.define("fr_FR") do |l|
   l.store "You have no internet connection", "Vous n'avez pas de connexion à internet"
 
   # app/views/admin/dashboard/_overview.html.erb
-  l.store "This place gives you a quick overview of what happens on your Typo blog and what you can do. Maybe will you want to %s, %s or %s.", "Voici un rapide aperçu de ce que peut faire votre blog Typo. Peux-être voulez vous %s, %s ou %s"
+  l.store "This place gives you a quick overview of what happens on your Typo blog and what you can do. Maybe will you want to %s", "Voici un rapide aperçu de ce que peut faire votre blog Typo. Peux-être voulez vous %s"
   l.store "update your profile or change your password", "mettre votre profil à jour ou changer votre mot de passe"
   l.store "You can also do a bit of design, %s or %s.", "Vous pouvez également faire un peu de personnalisation, %s, %s"
   l.store "change your blog presentation", "changer l'apparence de votre blog"
   l.store "enable plugins", "activer des plugins"
-  l.store "If you need help, %s. You can also %s to customize your Typo blog.", ""
+  l.store "If you need help, %s.", "Si vous avez besoin d'aide, vous pouvez %s."
+  l.store "You can also %s to customize your Typo blog.", "Vous pouvez également %s pour personnaliser votre blog Typo."
   l.store "write a post", "écrire un article"
   l.store "write a page", "publier une page statique"
   l.store "read our documentation", "consulter notre documentation"
