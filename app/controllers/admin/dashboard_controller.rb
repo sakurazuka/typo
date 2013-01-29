@@ -1,4 +1,6 @@
 class Admin::DashboardController < Admin::BaseController
+  before_filter :check_secret_token
+  
   require 'open-uri'
   require 'time'
   require 'rexml/document'
@@ -92,6 +94,18 @@ class Admin::DashboardController < Admin::BaseController
 
   private
 
+  def check_secret_token
+    if TypoBlog::Application.config.secret_token == "08aac1f2d29e54c90efa24a4aefef843ab62da7a2610d193bc0558a50254c7debac56b48ffd0b5990d6ed0cbecc7dc08dce1503b6b864d580758c3c46056729a"
+      file = File.join(Rails.root, "config", "secret.token")
+      
+      if ! File.writable?(file)
+        flash[:error] = _("Error: Typo was unable to generate a decent secret token. Security is at risk. Please, change %s content", file)
+        return
+      end      
+      flash[:error] = _("For security reasons, you should restart your Typo application. Enjoy your blogging experience.")
+    end
+  end
+  
   class RssItem < Struct.new(:link, :title, :description, :description_link, :date, :author)
     def to_s; title end
   end
@@ -109,7 +123,7 @@ class Admin::DashboardController < Admin::BaseController
       item.link        = REXML::XPath.match(elem, "link/text()").first.value rescue ""
       item.description = REXML::XPath.match(elem, "description/text()").first.value rescue ""
       item.author      = REXML::XPath.match(elem, "dc:publisher/text()").first.value rescue ""
-      item.date        = Time.mktime(*ParseDate.parsedate(REXML::XPath.match(elem, "dc:date/text()").first.value)) rescue Time.now
+      item.date        = Time.mktime(*ParseDate.parsedate(REXML::XPath.match(elem, "dc:date/text()").first.value)) rescue Date.parse(REXML::XPath.match(elem, "pubDate/text()").first.value) rescue Time.now
 
       item.description_link = item.description
       item.description.gsub!(/<\/?a\b.*?>/, "") # remove all <a> tags

@@ -333,7 +333,7 @@ function edSpell(which) {
 }
 
 function edToolbar(which) {
-	document.write('<div id="ed_toolbar_' + which + '">');
+	document.write('<div id="ed_toolbar_' + which + '" class="btn-toolbar">');
 	for (i = 0; i < extendedStart; i++) {
 		edShowButton(which, edButtons[i], i);
 	}

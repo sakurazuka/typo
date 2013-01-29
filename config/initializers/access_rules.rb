@@ -63,7 +63,7 @@ AccessControl.map :require => [ :admin, :publisher, :contributor ]  do |map|
     project.submenu "Categories",     { :controller => "admin/categories", :action => "new" }
     project.submenu "Tags",           { :controller => "admin/tags", :action => "index" }
     project.submenu "Article Types",  { :controller => "admin/post_types", :action => "new" }
-    project.submenu "Redirects",      { :controller => "admin/redirects", :action => "index" }
+    project.submenu "Redirects",      { :controller => "admin/redirects", :action => "new" }
   end
 
   map.project_module :pages, nil do |project|
@@ -88,6 +88,16 @@ AccessControl.map :require => [ :admin, :publisher, :contributor ]  do |map|
     end
   end
 
+  map.project_module :users, nil do |project|
+    project.menu "Users",            { :controller => "admin/users", :action => "index" }
+    project.submenu "Manage users",            { :controller => "admin/users", :action => "index" }
+  end
+  
+  map.project_module :profile, nil do |project|
+    project.menu "Profile",            { :controller => "admin/profiles", :action => "index" }
+    project.submenu "Your profile",            { :controller => "admin/profiles", :action => "index" }
+  end
+
   map.project_module :settings, nil do |project|
     project.menu    "Settings",         { :controller => "admin/settings", :action => "index" }
     project.submenu "General settings", { :controller => "admin/settings", :action => "index" }
@@ -97,10 +107,6 @@ AccessControl.map :require => [ :admin, :publisher, :contributor ]  do |map|
     project.submenu "Error messages",   { :controller => "admin/settings", :action => "errors" }
   end
 
-  map.project_module :users, nil do |project|
-    project.menu "Users",            { :controller => "admin/users", :action => "index" }
-    project.submenu "Manage",            { :controller => "admin/users", :action => "index" }
-  end
 
   map.project_module :seo, nil do |project|
     project.menu    "SEO",  { :controller => "admin/seo", :action => "index" }

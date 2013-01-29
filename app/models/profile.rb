@@ -1,9 +1,10 @@
 class Profile < ActiveRecord::Base
   serialize :modules
   validates_uniqueness_of :label
-  has_and_belongs_to_many :rights
 
   ADMIN = 'admin'
+  PUBLISHER = 'publisher'
+  CONTRIBUTOR = 'contributor'
 
   def modules
     read_attribute(:modules) || []

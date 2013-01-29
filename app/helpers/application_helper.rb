@@ -59,26 +59,6 @@ module ApplicationHelper
     end
   end
 
-  def admin_tools_for(model)
-    type = model.class.to_s.downcase
-    tag = []
-    tag << content_tag("div",
-      link_to_remote('nuke', {
-        :url => {
-          :controller => "admin/feedback",
-          :action => "delete",
-          :id => model.id },
-        :method => :post,
-        :confirm => _("Are you sure you want to delete this %s?", "#{type}" )
-        }, :class => "admintools") <<
-      link_to('edit', {
-        :controller => "admin/feedback",
-        :action => "edit", :id => model.id
-        }, :class => "admintools"),
-      :id => "admin_#{type}_#{model.id}", :style => "display: none")
-    tag.join(" | ")
-  end
-
   def onhover_show_admin_tools(type, id = nil)
     tag = []
     tag << %{ onmouseover="if (getCookie('typo_user_profile') == 'admin') { $('#admin_#{[type, id].compact.join('_')}').show(); }" }
@@ -225,7 +205,7 @@ module ApplicationHelper
   def render_flash
     output = []
     for key,value in flash
-      output << "<span class=\"#{key.to_s.downcase}\">#{h(value)}</span>"
+      output << "<span class=\"#{key.to_s.downcase}\">#{h(_(value))}</span>"
     end if flash
     output.join("<br />\n")
   end

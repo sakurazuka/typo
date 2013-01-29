@@ -27,7 +27,7 @@
         <%= check_box(:setting, :rss_description)%>
         <%= _("Use RSS description")%>
       </label>
-      <p class='help-block'><%= "#{_('This will display')}  #{_('at the bottom of each of your post in the RSS feed')}"%></p>
+      <p class='help-block'><%= "#{_('This will display')}  #{_('at the bottom of each post in the RSS feed')}"%></p>
       <%= show_rss_description %>
     </div>
   </div>
@@ -70,7 +70,7 @@
     <label class='control-label'><%= _("Dofollow") %></label>
     <div class='controls'>
       <label class='checkbox' for="setting_dofollowify"><%= _("Use dofollow in comments")%>
-        <%= check_box(:setting, :dofollowify)%><p class='help-block'><%= _("Maybe you want to moderate feedbacks when turning this on") %></p>
+        <%= check_box(:setting, :dofollowify)%><p class='help-block'><%= _("You may want to moderate feedback when turning this on") %></p>
       </label>
     </div>
   </div>
@@ -80,7 +80,7 @@
       <label class='checkbox' for="setting_use_canonical_url">
         <%= check_box(:setting, :use_canonical_url)%>
         <%= _("Use canonical URL")%>
-        <span class='help-block'><%= _("Read more about %s", link_to("rel='canonical'", "http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=139394")) %></span>
+        <span class='help-block'><%= _("Read more about %s", link_to("rel='canonical'", "http://support.google.com/webmasters/bin/answer.py?hl=en&answer=139394")) %></span>
       </label>      
     </div>
   </div>	
@@ -104,7 +104,7 @@
     <label class='control-label' for="setting_custom_tracking_field"><%= _("Custom tracking code")%></label>
     <div class='controls'>
       <%= text_area(:setting, :custom_tracking_field, :rows => 3, :class => 'span6')%>
-      <p class='help-block'>Here you can add anything you want to appear in your application header, such as an anaytics service tracking code.</p>
+      <p class='help-block'><%= _("Here you can add anything you want to appear in your application header, such as analytics service tracking code.") %></p>
     </div>
   </div>
 </fieldset>

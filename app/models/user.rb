@@ -135,7 +135,11 @@ class User < ActiveRecord::Base
   def simple_editor?
     editor == 'simple'
   end
-
+  
+  def visual_editor?
+    editor == 'visual'
+  end
+  
   def password=(newpass)
     @password = newpass
   end
@@ -153,7 +157,13 @@ class User < ActiveRecord::Base
   end
 
   def display_name
-    name
+    if !nickname.blank?
+      nickname
+    elsif !name.blank?
+      name
+    else
+      login
+    end
   end
 
   def permalink

@@ -1,8 +1,7 @@
 <% @page_heading = _("Title settings")%>
-
 <%= error_messages_for 'blog' %>
 
-<%= form_tag :action => 'titles' do %>
+<%= form_tag :action => 'update' do %>
 
 <fieldset class='form-horizontal'>
   <legend><%= _("Home") %></legend>
@@ -145,7 +144,7 @@
 </fieldset>
 
 <h3><%= _("Help on title settings")%></h3>
-  <p class='help-block'>These tags can be included in your templates and will be replaced when displaying the page.</p>
+  <p class='help-block'><%= _("These tags can be included in your templates and will be replaced when displaying the page.") %></p>
   <table class="table table-striped">
     <tr>
       <td>%title%</td>
@@ -211,6 +210,6 @@
   </div>
 </div>
 <%= save_settings %>
-<%= hidden_field_tag 'from', 'permalinks' %>
+<%= hidden_field_tag 'from', 'titles' %>
 <% end %>
 
