@@ -684,6 +684,7 @@ Localization.define("es_MX") do |l|
   l.store "RSS feed for this post", "Feed RSS para este art&iacute;culo"
   l.store "trackback uri", "trackback uri"
   l.store "Comments are disabled", "Los comentarios est&aacute;n deshabilitados"
+  l.store "Trackbacks are disabled", ""
 
   # app/views/authors/show.html.erb
   l.store "Web site:", ""
@@ -699,7 +700,13 @@ Localization.define("es_MX") do |l|
   l.store "This comment has been flagged for moderator approval.", ""
 
   # app/views/layouts/administration.html.erb
+  l.store "Logged in as %s", "Bienvenido, %s"
   l.store "%s &raquo;", ""
+  l.store "Help", "Ayuda"
+  l.store "Documentation", "Documentación"
+  l.store "Report a bug", "Informar de un error"
+  l.store "In page plugins", ""
+  l.store "Sidebar plugins", ""
   l.store "is proudly powered by", ""
   l.store "Dashboard", ""
 

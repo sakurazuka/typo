@@ -694,6 +694,7 @@ Localization.define("nb_NO") do |l|
   l.store "RSS feed for this post", "RSS-feed for denne artikkel"
   l.store "trackback uri", "Trackback URI"
   l.store "Comments are disabled", "Kommentarer er deaktiveret"
+  l.store "Trackbacks are disabled", ""
 
   # app/views/authors/show.html.erb
   l.store "Website:", "Hjemmeside:"
@@ -713,7 +714,13 @@ Localization.define("nb_NO") do |l|
   l.store "This comment has been flagged for moderator approval.", "Denne kommentaren har blitt flagget for godkjenning av moderator."
 
   # app/views/layouts/administration.html.erb
+  l.store "Logged in as %s", ""
   l.store "%s &raquo;", ""
+  l.store "Help", ""
+  l.store "Documentation", ""
+  l.store "Report a bug", ""
+  l.store "In page plugins", ""
+  l.store "Sidebar plugins", ""
   l.store "is proudly powered by", "bruker med stolthet"
   l.store "Dashboard", ""
 

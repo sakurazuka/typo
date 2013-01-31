@@ -6,7 +6,7 @@ It provides every feature a modern blogging engine needs: powerful themes, exten
 
 Typo is free software released under the MIT licence and maintained by a bunch of cool people in their spare time.
 
-The current version is Typo 6.1.2 for Ruby on Rails 3.2.11.
+The current version is Typo 6.1.3 for Ruby on Rails 3.2.11.
 
 !http://blog.typosphere.org/download-typo.png(Download Typo)!:http://typosphere.org/stable.tgz
 
@@ -71,6 +71,8 @@ We recommend using Passenger (mod_rails) or Thin / Unicorn with Apache or Nginx.
 The admin interface for Typo allows you to post articles and change configuration settings. It can be found at http://yourdomain.com/admin. New content can be posted using the admin interface or a desktop blog editor such as MarsEdit or Ecto.
 
 h1. Maintainers
+
+"!https://codeclimate.com/badge.png!":https://codeclimate.com/github/fdv/typo
 
 This is a list of Typo maintainers. If you have committed, please add your name and contact details to the list.
 

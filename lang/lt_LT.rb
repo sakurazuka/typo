@@ -682,6 +682,7 @@ Localization.define("lt_LT") do |l|
   l.store "RSS feed for this post", "šio įrašo RSS"
   l.store "trackback uri", "Trackback URI"
   l.store "Comments are disabled", "Komentavimas išjungtas"
+  l.store "Trackbacks are disabled", ""
 
   # app/views/authors/show.html.erb
   l.store "Web site:", ""
@@ -697,7 +698,13 @@ Localization.define("lt_LT") do |l|
   l.store "This comment has been flagged for moderator approval.", ""
 
   # app/views/layouts/administration.html.erb
+  l.store "Logged in as %s", "Sveiki, %s"
   l.store "%s &raquo;", ""
+  l.store "Help", "Padėti"
+  l.store "Documentation", "Vadovėlis"
+  l.store "Report a bug", "Praneškite apie problemą"
+  l.store "In page plugins", ""
+  l.store "Sidebar plugins", ""
   l.store "is proudly powered by", ""
   l.store "Dashboard", ""
 

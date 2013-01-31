@@ -681,6 +681,7 @@ Localization.define("ja_JP") do |l|
   l.store "RSS feed for this post", "この記事のRSSフィード"
   l.store "trackback uri", "トラックバックURL"
   l.store "Comments are disabled", "コメントは許可されていません"
+  l.store "Trackbacks are disabled", ""
 
   # app/views/authors/show.html.erb
   l.store "Web site:", ""
@@ -696,7 +697,13 @@ Localization.define("ja_JP") do |l|
   l.store "This comment has been flagged for moderator approval.", ""
 
   # app/views/layouts/administration.html.erb
+  l.store "Logged in as %s", ""
   l.store "%s &raquo;", ""
+  l.store "Help", ""
+  l.store "Documentation", ""
+  l.store "Report a bug", ""
+  l.store "In page plugins", ""
+  l.store "Sidebar plugins", ""
   l.store "is proudly powered by", ""
   l.store "Dashboard", "ダッシュボード"
 
