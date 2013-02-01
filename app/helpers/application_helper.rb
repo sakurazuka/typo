@@ -138,7 +138,7 @@ module ApplicationHelper
     the_class = flash[:error] ? 'error' : 'success'
 
     html = "<div class='alert alert-#{the_class}'>"
-    html << "<a class='close' href='#'>×</a>"
+    html << "<a class='close my_parent' href='#'>×</a>"
     html << render_flash rescue nil
     html << "</div>"
   end

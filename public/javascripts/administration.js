@@ -22,6 +22,7 @@ $(window).load(function() {
 
 jQuery(document).ready(function($){
  $("[selector]").datetimeselect();
+ $(".close.my_parent").click(function(evt) { evt.stopPropagation(); close_my_parent(evt.target); });
 });
 
 // UJS for new category link in admin#new_article
@@ -554,4 +555,8 @@ function edShowExtraCookie() {
 		}
 	}
 	return false;
+}
+
+function close_my_parent(elmt) {
+  $(elmt).parent().remove();
 }
