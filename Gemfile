@@ -20,11 +20,10 @@ else
   end
 end
 
-source :rubygems
+source 'https://rubygems.org'
 
-source :gemcutter
 gem 'hpricot'
-gem 'rails', '~> 3.2.11'
+gem 'rails', '~> 3.2.12'
 gem 'require_relative'
 gem 'htmlentities'
 gem 'bluecloth', '~> 2.1'
@@ -42,6 +41,7 @@ gem 'acts_as_tree_rails3'
 gem 'fog'
 gem 'recaptcha', :require => 'recaptcha/rails', :branch => 'rails3'
 gem 'carrierwave'
+gem 'akismet', '~> 1.0'
 
 # TODO: Replace with jquery
 gem 'prototype-rails', '~> 3.2.1'
