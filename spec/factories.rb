@@ -1,10 +1,5 @@
 # coding: utf-8
 
-# Helper methods
-def some_user
-  User.find(:first) || FactoryGirl.create(:user)
-end
-
 # Factory definitions
 FactoryGirl.define do
   sequence :name do |n|
@@ -167,7 +162,7 @@ http://alsoping.example.com/rpc/ping"
     permalink_format "/%year%/%month%/%day%/%title%"
     use_canonical_url true
     lang "en_US"
-    
+
     after :stub do |blog|
       Blog.stub(:default) { blog }
       [blog.text_filter, blog.comment_text_filter].uniq.each do |filter|
@@ -182,10 +177,11 @@ http://alsoping.example.com/rpc/ping"
     l.modules [:dashboard, :profile]
   end
 
-  factory :profile_admin, :parent => :profile do |l|
-    l.label {FactoryGirl.generate(:label)}
-    l.nicename 'Typo administrator'
-    l.modules [:dashboard, :write, :articles, :pages, :feedback, :themes, :sidebar, :users, :seo, :media, :settings, :profile]
+  factory :profile_admin, parent: :profile do
+    label Profile::ADMIN
+    nicename 'Typo administrator'
+    modules [ :dashboard, :write, :articles, :pages, :feedback, :themes,
+              :sidebar, :users, :seo, :media, :settings, :profile ]
   end
 
   factory :profile_publisher, :parent => :profile do |l|
@@ -209,7 +205,7 @@ http://alsoping.example.com/rpc/ping"
   end
 
   factory :resource do |r|
-    r.filename {FactoryGirl.generate(:file_name)}
+    r.upload {FactoryGirl.generate(:file_name)}
     r.mime 'image/jpeg'
     r.size 110
   end
@@ -243,16 +239,16 @@ http://alsoping.example.com/rpc/ping"
     c.published false
   end
 
-  factory :page do |p|
-    p.name 'page_one'
-    p.title 'Page One Title'
-    p.body 'ho ho ho'
-    p.created_at '2005-05-05 01:00:01'
-    p.published_at '2005-05-05 01:00:01'
-    p.updated_at '2005-05-05 01:00:01'
-    p.user { some_user }
-    p.published true
-    p.state 'published'
+  factory :page do
+    name 'page_one'
+    title 'Page One Title'
+    body 'ho ho ho'
+    created_at '2005-05-05 01:00:01'
+    published_at '2005-05-05 01:00:01'
+    updated_at '2005-05-05 01:00:01'
+    user
+    published true
+    state 'published'
   end
 
   factory :trackback do |t|

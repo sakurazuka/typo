@@ -62,7 +62,7 @@ module ContentBase
 
   # Post-process the HTML.  This is a noop by default, but Comment overrides it
   # to enforce HTML sanity.
-  def html_postprocess(field,html)
+  def html_postprocess(field, html)
     html
   end
 
@@ -83,13 +83,20 @@ module ContentBase
     self.save!
   end
 
+  # The default text filter.  Generally, this is the filter specified by blog.text_filter,
+  # but comments may use a different default.
+  def default_text_filter
+    blog.text_filter_object
+  end
+
+
   module ClassMethods
     def content_fields *attribs
       class_eval "def content_fields; #{attribs.inspect}; end"
     end
 
     def find_published(what = :all, options = {})
-      with_scope(:find => {:order => default_order, :conditions => {:published => true}}) do
+      with_scope(:find => where(:published => true).order(default_order)) do
         find what, options
       end
     end

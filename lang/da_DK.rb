@@ -212,6 +212,8 @@ Localization.define("da_DK") do |l|
   l.store "Allow trackbacks", "Tillad Trackbacks"
   l.store "Password:", "Kodeord"
   l.store "Publish", "Udgiv"
+  l.store "Tags", ""
+  l.store "Separate tags with commas. Use double quotes (&quot;) around multi-word tags, e.g. &quot;opera house&quot;.", ""
   l.store "Excerpt", ""
   l.store "Excerpts are post summaries that show only on your blog homepage and won’t appear on the post itself", ""
   l.store "Uploads", "Filer"
@@ -681,6 +683,7 @@ Localization.define("da_DK") do |l|
   l.store "RSS feed for this post", "RSS Feed for denne artikel"
   l.store "trackback uri", "Trackback URI"
   l.store "Comments are disabled", "Kommentarer er deaktiveret"
+  l.store "Trackbacks are disabled", ""
 
   # app/views/authors/show.html.erb
   l.store "Web site:", ""

@@ -212,6 +212,8 @@ Localization.define("ro_RO") do |l|
   l.store "Allow trackbacks", "Se permit retrolegături"
   l.store "Password:", ""
   l.store "Publish", "Publică"
+  l.store "Tags", ""
+  l.store "Separate tags with commas. Use double quotes (&quot;) around multi-word tags, e.g. &quot;opera house&quot;.", ""
   l.store "Excerpt", ""
   l.store "Excerpts are post summaries that show only on your blog homepage and won’t appear on the post itself", ""
   l.store "Uploads", ""
@@ -682,6 +684,7 @@ Localization.define("ro_RO") do |l|
   l.store "RSS feed for this post", "Flux RSS pentru acest articol"
   l.store "trackback uri", "URL pentru retrolegătură"
   l.store "Comments are disabled", "Comentariile sînt dezactivate"
+  l.store "Trackbacks are disabled", ""
 
   # app/views/authors/show.html.erb
   l.store "Web site:", ""

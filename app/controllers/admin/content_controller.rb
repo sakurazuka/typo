@@ -91,12 +91,12 @@ class Admin::ContentController < Admin::BaseController
     get_fresh_or_existing_draft_for_article
 
     @article.attributes = params[:article]
-    
+
     # Crappy workaround to have the visual editor work.
     if current_user.visual_editor?
       @article.body = params[:article][:body_and_extended]
     end
-    
+
     @article.published = false
     @article.set_author(current_user)
     @article.save_attachments!(params[:attachments])
@@ -112,8 +112,8 @@ class Admin::ContentController < Admin::BaseController
         page.replace_html('autosave', hidden_field_tag('article[id]', @article.id))
         page.replace_html('preview_link', link_to(_("Preview"), {:controller => '/articles', :action => 'preview', :id => @article.id}, {:target => 'new', :class => 'btn info'}))
         page.replace_html('destroy_link', link_to_destroy_draft(@article))
-        if params[:article][:published_at] and params[:article][:published_at].to_time.to_i < Time.now.to_time.to_i
-          page.replace_html('publish', calendar_date_select('article', 'published_at', {:class => 'span7'})) if @article.state.to_s.downcase == "draft" 
+        if params[:article][:published_at] and params[:article][:published_at].to_time.to_i < Time.now.to_time.to_i and @article.parent_id.nil?
+          page.replace_html('publish', calendar_date_select('article', 'published_at', {:class => 'span7'})) if @article.state.to_s.downcase == "draft"
         end
       end
 
@@ -140,7 +140,7 @@ class Admin::ContentController < Admin::BaseController
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)
-    @article.text_filter = current_user.text_filter if current_user.simple_editor?
+    @article.text_filter = set_textfilter
 
     @post_types = PostType.find(:all)
     if request.post?
@@ -167,7 +167,7 @@ class Admin::ContentController < Admin::BaseController
 
       if @article.save
         unless @article.draft
-          Article.all(conditions: { parent_id: @article.id }).map(&:destroy)
+          Article.where(parent_id: @article.id).map(&:destroy)
         end
         @article.categorizations.clear
         if params[:categories]
@@ -198,4 +198,10 @@ class Admin::ContentController < Admin::BaseController
     end
   end
 
+  private
+  def set_textfilter
+    return TextFilter.find_by_name("none") if current_user.visual_editor?
+    return current_user.text_filter if @article.id.nil?
+  end
+  
 end

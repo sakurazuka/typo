@@ -212,6 +212,8 @@ Localization.define("zh_TW") do |l|
   l.store "Allow trackbacks", "允許引用"
   l.store "Password:", ""
   l.store "Publish", "公開"
+  l.store "Tags", ""
+  l.store "Separate tags with commas. Use double quotes (&quot;) around multi-word tags, e.g. &quot;opera house&quot;.", ""
   l.store "Excerpt", ""
   l.store "Excerpts are post summaries that show only on your blog homepage but won’t appear on the post itself", ""
   l.store "Uploads", "上載"
@@ -681,6 +683,7 @@ Localization.define("zh_TW") do |l|
   l.store "RSS feed for this post", "為本篇提供RSS"
   l.store "trackback uri", "引用URL"
   l.store "Comments are disabled", "評論停用"
+  l.store "Trackbacks are disabled", ""
 
   # app/views/authors/show.html.erb
   l.store "Web site:", ""

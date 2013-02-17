@@ -20,9 +20,9 @@ else
   end
 end
 
-source :rubygems
+source 'https://rubygems.org'
 
-gem 'rails', '~> 3.2.11'
+gem 'rails', '~> 3.2.12'
 gem 'require_relative'
 gem 'htmlentities'
 gem 'bluecloth', '~> 2.1'
@@ -39,6 +39,8 @@ gem 'acts_as_list'
 gem 'acts_as_tree_rails3'
 gem 'fog'
 gem 'recaptcha', :require => 'recaptcha/rails', :branch => 'rails3'
+gem 'carrierwave'
+gem 'akismet', '~> 1.0'
 
 gem 'jquery-rails', '~> 2.1'
 
@@ -46,8 +48,10 @@ gem 'rails_autolink', '~> 1.0.9'
 gem 'dynamic_form', '~> 1.1.4'
 
 group :development, :test do
+  gem 'thin'
   gem 'factory_girl', '~> 3.5'
   gem 'webrat'
   gem 'rspec-rails', '~> 2.12.0'
   gem 'simplecov', :require => false
+  gem 'pry-rails'
 end

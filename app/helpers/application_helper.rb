@@ -70,7 +70,7 @@ module ApplicationHelper
     if @feed_title.present?
       @feed_title
     elsif @page_title.present?
-      "#{this_blog.blog_name} : #{@page_title}"
+      @page_title
     else
       this_blog.blog_name
     end
@@ -156,9 +156,12 @@ module ApplicationHelper
   end
 
   def new_js_distance_of_time_in_words_to_now(date)
+    # Ruby Date class doesn't have #utc method, but _typo_dev.html.erb
+    # passes Ruby Date.
+    date = date.to_time
     time = _(date.utc.strftime(_("%%a, %%d %%b %%Y %%H:%%M:%%S GMT", date.utc)))
-    timestamp = date.utc.to_i ;
-    "<span class=\"typo_date date gmttimestamp-#{timestamp}\" title=\"#{time}\" >#{time}</span>"
+    timestamp = date.utc.to_i
+    content_tag(:span, time, {:class => "typo_date date gmttimestamp-#{timestamp}", :title => time})
   end
 
   def display_date(date)
