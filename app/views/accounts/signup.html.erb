@@ -1,26 +1,24 @@
-<div class='row'>
-  <div class='span4 offset4'>
-    <div class='well'>
-      <%= form_tag :action=> "signup" do %>
-      <div class='clearfix'>
-        <h2><%= _("Create an account") %></h2>
-      </div>
-      <div id="flash"><%= render_the_flash %></div>
-      <div class='clearfix'>
-        <%= text_field(:user, :login, {:class => 'login', :placeholder => _("Username") })%>
-      </div>
-      <div class='clearfix'>
-        <%= text_field(:user, :email, {:class => 'login', :placeholder => _("Email") })%>
-      </div>
-      <div class='clearfix'>
-        <input type="submit" id="submit" class='btn btn-info' value="<%= _('Signup')%>" />
-      </div>
-      <% end %>
-      <div class='clearfix'>
-        <p>
-			<%= [lost_password, back_to_login].join("<br />") %>
-        </p>        
-      </div>
+<div class='span3 offset4'>
+  <div class='well'>
+    <fieldset>
+    <%= form_tag :action=> "signup" do %>
+    <h3 class='page-header'><%= _("Create an account") %></h3>
+    <div id="flash"><%= render_the_flash %></div>
+    <div class='clearfix'>
+      <%= text_field(:user, :login, {:class => 'input-block-level', :placeholder => _("Username") })%>
+    </div>
+    <div class='clearfix'>
+      <%= text_field(:user, :email, {:class => 'input-block-level', :placeholder => _("Email") })%>
+    </div>
+    <div class='clearfix'>
+      <input type="submit" id="submit" class='btn btn-info' value="<%= _('Signup')%>" />
+    </div>
+    <% end %>
+    <hr />
+    <div class='clearfix'>
+      <ul class='inline'>
+        <%= [lost_password, back_to_login].join("<small class='muted'>•</small>") %>
+      </ul>        
     </div>
   </div>
 </div>

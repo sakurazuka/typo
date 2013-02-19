@@ -20,7 +20,7 @@ else
   end
 end
 
-source :rubygems
+source 'https://rubygems.org'
 
 gem 'rails', '~> 3.2.12'
 gem 'require_relative'
@@ -40,6 +40,7 @@ gem 'acts_as_tree_rails3'
 gem 'fog'
 gem 'recaptcha', :require => 'recaptcha/rails', :branch => 'rails3'
 gem 'carrierwave'
+gem 'akismet', '~> 1.0'
 
 gem 'jquery-rails', '~> 2.1'
 
