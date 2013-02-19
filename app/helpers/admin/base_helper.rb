@@ -155,12 +155,11 @@ module Admin::BaseHelper
   end
 
   def build_editor_link(label, action, id, update, editor)
-    link = link_to_remote(label,
-            :url => { :action => action, 'editor' => editor},
-            :class => 'ui-button-text',
-            :loading => "('#update_spinner_#{id}').show()",
-            :success => "('update_spinner_#{id}').toggle()",
-            :update => "#{update}")
+    link = link_to(label,
+            { :action => action, 'editor' => editor},
+            :class => 'ui-button-text spinner',
+            :remote => true,
+            :data => "#{update}")
     link << image_tag("spinner-blue.gif", :id => "update_spinner_#{id}", :style => 'display:none;')
   end
 

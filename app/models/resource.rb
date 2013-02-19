@@ -1,7 +1,7 @@
 class Resource < ActiveRecord::Base
   belongs_to :article
 
-  mount_uploader :upload, ResourceUploader
+  mount_uploader :upload, ::ResourceUploader
 
   scope :without_images, lambda { where("mime NOT LIKE '%image%'") }
   scope :images, lambda { where("mime LIKE '%image%'") }
