@@ -1,9 +1,9 @@
-<div class='well'>
+<div class='well well-smal'>
   <h3 class='page-header'><%= _("Latest Comments") %></h3>
-  <ul class='unstyled' id="commentList">
   <% if @comments.size == 0 %>
-    <li><%= _("No comments yet") %></li>
+    <p class='alert'><%= _("No comments yet") %></p>
   <% else %>
+  <ul class='unstyled' id="commentList">
     <% for comment in @comments -%>
     <li id='feedback_<%= comment.id %>'>
       <%= avatar_tag(:email => comment.email, :url => comment.url) %>
@@ -18,6 +18,6 @@
 	  <hr />
     </li>
     <% end %>
-  <% end %>
   </ul>
+  <% end %>
 </div>
