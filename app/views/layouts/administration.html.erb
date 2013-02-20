@@ -6,7 +6,7 @@
   <title><%= this_blog.blog_name %> – <%= controller.controller_name %></title>
   <meta http-equiv="imagetoolbar" content="no" />
   <%= stylesheet_link_tag "bootstrap", "administration_structure", "jquery.lightbox-0.5", "/stylesheets/calendar_date_select/jquery.calendardateselect.css" %>
-  <%= javascript_include_tag "jquery", "jquery-ui", "jquery_ujs", "typo", "jquery.lightbox-0.5", "jquery.carousel.min", "jquery.observe_field.js", "administration", "calendar_date_select/jquery/jquery.string.1.0.js", "calendar_date_select/jquery/jquery.calendardateselect.js" %>
+  <%= javascript_include_tag "jquery", "jquery-ui", "jquery_ujs", "typo", "jquery.lightbox-0.5", "jquery.carousel.min", "jquery.observe_field.js", "administration", "calendar_date_select/jquery/jquery.string.1.0.js", "calendar_date_select/jquery/jquery.calendardateselect.js", "bootstrap.min" %>
   <style type="text/css">
     #carousel-content .slide { width: <%= this_blog.image_thumb_size %>; }
   </style>
@@ -62,9 +62,8 @@
       <div class='span10'>
           <%= render_the_flash %>
           <%= show_page_heading %>
-          <%= yield  %>
       </div>
-      
+      <%= yield  %>      
     </div>
   </div>
 
