@@ -3,11 +3,11 @@
     <%= _("Latest news from the Typo development blog") %>
   </h3>
   <% if @typo_links.nil? %>
-  <%= _('You have no internet connection') %>
+  <p class='alert alert-error'><%= _('You have no internet connection') %></p>
   <% else %>
   <ul class='unstyled'>
   <% if @typo_links.size == 0 %>
-    <li><%= _("Oh no, nothing new") %></li>
+    <li class='alert'><%= _("Oh no, nothing new") %></li>
   <% else %>
     <% @typo_links.each do |link| -%>
     <li <%= alternate_class %>>
