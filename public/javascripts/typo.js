@@ -75,8 +75,8 @@ function distance_of_time_in_words(minutes) {
 
 function commentAdded(request) {
   alert('need to be rewritten in jquery');
-  Element.cleanWhitespace('commentList');
-  new Effect.BlindDown($('commentList').lastChild);
+  //Element.cleanWhitespace('commentList');
+  //new Effect.BlindDown($('commentList').lastChild);
   $("#dummy_comment").remove();
   $('#commentform').parentNode.elements["comment_body"].value = '';
   $('#commentform').parentNode.elements["comment_body"].focus();
