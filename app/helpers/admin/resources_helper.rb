@@ -6,7 +6,7 @@ module Admin::ResourcesHelper
                 link_to(_("Medium size"), resource.upload.medium.url),
                 link_to(_("Original size"), resource.upload.url)]
     end
-    links << link_to(_("delete"), { :action => 'destroy', :id => resource.id, :search => params[:search], :page => params[:page] },  :confirm => _("Are you sure?"), :method => :post)
+    links << small_to_delete(resource)
     content_tag :small do
       links.join(" | ").html_safe
     end

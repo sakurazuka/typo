@@ -1,16 +1,18 @@
 <% @page_heading = _('Media library') %>
 
-<%= render 'upload' -%>
+<div class='span10'>
+  <%= render 'upload' -%>  
 
-<table class="table table-striped">
-  <thead>
-    <tr class='noborder'>
-      <th><%= _("Filename")%> <small>(<%= _('right-click for link')%>)</small></th>
-      <th><%= _("Content Type")%></th>
-      <th><%= _("File Size")%></th>
-      <th><%= _("Date")%></th>
-    </tr>
-  </thead>
-  <%= render 'resource_list', { :resources => @resources } %>    
-  <%= display_pagination(@resources, 6)%>
-</table>
+  <table class="table table-striped">
+    <thead>
+      <tr class='noborder'>
+        <th><%= _("Filename")%> <small>(<%= _('right-click for link')%>)</small></th>
+        <th><%= _("Content Type")%></th>
+        <th><%= _("File Size")%></th>
+        <th><%= _("Date")%></th>
+      </tr>
+    </thead>
+    <%= render 'resource_list', { :resources => @resources } %>    
+    <%= display_pagination(@resources, 6)%>
+  </table>  
+</div>

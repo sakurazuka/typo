@@ -1,6 +1,6 @@
 <% @page_heading = _("Redirects") %>
 
-<div class='left_form'>
+<div class='span3'>
 <%= form_tag :action=>"edit", :id => @redirect.id do %>
   <%= error_messages_for 'redirect' %>
   <label for="redirect_from_path"><%= _("From")%></label>
@@ -14,7 +14,7 @@
 <% end %>
 </div>
 
-<div class='right_table'>
+<div class='span7'>
   <table class="table table-striped">
     <thead>
       <tr class='noborder'>
