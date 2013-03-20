@@ -48,12 +48,12 @@ module TypoBlog
 
   require 'format'
   require 'i18n_interpolation_deprecation'
-  require 'migrator'
   require 'route_cache'
   ## Required by the models themselves.
   # require 'spam_protection'
   require 'stateful'
   require 'transforms'
+  require 'typo_time'
   require 'typo_guid'
   ## Required by the plugins themselves.
   # require 'typo_plugins'
