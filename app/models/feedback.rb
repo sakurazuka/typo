@@ -3,6 +3,7 @@ class Feedback < ActiveRecord::Base
   self.table_name = "feedback"
 
   belongs_to :text_filter
+  belongs_to :article
 
   include TypoGuid
 
@@ -103,7 +104,7 @@ class Feedback < ActiveRecord::Base
         sp.is_spam?(self.send(field))
       end
     end
-  rescue Timeout::Error => e
+  rescue Timeout::Error
     nil
   end
 
@@ -114,7 +115,7 @@ class Feedback < ActiveRecord::Base
       Timeout.timeout(defined?($TESTING) ? 30 : 60) do
         akismet.comment_check(ip, nil, akismet_options)
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       nil
     end
   end
@@ -147,7 +148,7 @@ class Feedback < ActiveRecord::Base
         akismet.send("submit_#{spam_or_ham}",
                      ip, nil, akismet_options)
       }
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       nil
     end
   end

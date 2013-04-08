@@ -37,10 +37,10 @@ class Article < Content
 
   end
 
-  with_options(:conditions => { :published => true }, :order => 'created_at DESC') do |this|
-    this.has_many :published_comments,   :class_name => "Comment", :order => "created_at ASC"
-    this.has_many :published_trackbacks, :class_name => "Trackback", :order => "created_at ASC"
-    this.has_many :published_feedback,   :class_name => "Feedback", :order => "created_at ASC"
+  with_options(:conditions => { :published => true }, :order => 'created_at ASC') do |this|
+    this.has_many :published_comments, class_name: "Comment"
+    this.has_many :published_trackbacks, class_name: "Trackback"
+    this.has_many :published_feedback, class_name: "Feedback"
   end
 
   has_and_belongs_to_many :tags
@@ -58,12 +58,14 @@ class Article < Content
   scope :withdrawn, lambda { where(state: 'withdrawn').order('published_at DESC') }
   scope :pending, lambda { where('state = ? and published_at > ?', 'publication_pending', Time.now).order('published_at DESC') }
 
-  scope :bestof, lambda {
-    select('contents.*, comment_counts.count AS comment_count') \
-    .from("contents, (SELECT feedback.article_id AS article_id, COUNT(feedback.id) as count FROM feedback WHERE feedback.state IN ('presumed_ham', 'ham') GROUP BY feedback.article_id ORDER BY count DESC LIMIT 9) AS comment_counts") \
-    .where('comment_counts.article_id = contents.id') \
-    .where(published: true) \
-    .limit(5)
+  scope :bestof, ->() {
+    joins(:feedback).
+      where('feedback.published' => true, 'feedback.type' => 'Comment',
+            'contents.published' => true).
+      group('contents.id').
+      order('count(feedback.*) DESC').
+      select('contents.*, count(feedback.*) as comment_count').
+      limit(5)
   }
 
   setting :password, :string, ''
