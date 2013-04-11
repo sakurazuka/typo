@@ -1,3 +1,4 @@
+# coding: utf-8
 class Admin::DashboardController < Admin::BaseController
   require 'open-uri'
   require 'time'
@@ -47,7 +48,7 @@ class Admin::DashboardController < Admin::BaseController
   private
 
   def inbound_links
-    url = "http://www.google.com/search?q=link:#{this_blog.base_url}&tbm=blg&output=rss"
+    url = "https://www.google.com/search?q=links:#{this_blog.base_url}&tbm=blg&output=rss"
     parse(url).reverse
   end
 
@@ -70,7 +71,9 @@ class Admin::DashboardController < Admin::BaseController
   end
 
   def parse_rss(body)
-    xml = REXML::Document.new(body)
+    xml = REXML::Document.new(body.encode("UTF-8"))
+
+    puts body
 
     items        = []
     link         = REXML::XPath.match(xml, "//channel/link/text()").first.value rescue ""
@@ -82,7 +85,7 @@ class Admin::DashboardController < Admin::BaseController
       item.link        = REXML::XPath.match(elem, "link/text()").first.value rescue ""
       item.description = REXML::XPath.match(elem, "description/text()").first.value rescue ""
       item.author      = REXML::XPath.match(elem, "dc:publisher/text()").first.value rescue ""
-      item.date        = Time.mktime(*ParseDate.parsedate(REXML::XPath.match(elem, "dc:date/text()").first.value)) rescue Date.parse(REXML::XPath.match(elem, "pubDate/text()").first.value) rescue Time.now
+      item.date        = Date.parse(REXML::XPath.match(elem, "dc:date/text()").first.value) rescue Time.now
 
       item.description_link = item.description
       item.description.gsub!(/<\/?a\b.*?>/, "") # remove all <a> tags
