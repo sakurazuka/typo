@@ -105,14 +105,7 @@
         <script type="text/javascript">edToolbar('article_body_and_extended');</script>
       </div>
 
-      <div id ='visual_editor' <%= "style='display: none;'" if current_user.editor == 'simple'%> >
-        <%= text_area('article', 'body_and_extended', {:class => 'large', :height => '300px', :rows => '20'}) if current_user.editor == 'visual' %>
-      </div>
-
-      <div id='simple_editor' class='input_text' <%= "style='display: none;'" if current_user.editor == 'visual'%> >
-        <%= text_area('article', 'body_and_extended', {:class => 'large', :height => '300px', :rows => '20'}) if current_user.editor == 'simple' %>
-        <%#= render_macros(@macros) if current_user.editor == 'simple' %>
-      </div>
+      <%= render :partial => @editor_mode.to_s %>
     </div>
 
     <h4><%= _("Tags") %></h4>

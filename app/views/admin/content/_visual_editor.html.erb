@@ -1,3 +1,4 @@
+<%- if false -%>
 <script type="text/javascript">
   $('quicktags').style.display = 'none';
   $('simple_editor').style.display = 'none';
@@ -13,9 +14,14 @@
   $('article__body_and_extended_editor').value = html;
 
 </script>
+<%- end -%>
 <%= textarea_tag('article', 'body_and_extended', {:height => '300', :class => 'large'}) %>
+<p>Internal message: Fred, do what you want in this partial…</p>
 <script type="text/javascript">
   alert('oh god, I said: NO CKEDITOR');
+  <%- if false -%>
   CKEDITOR.instances.article__body_and_extended_editor.setData(html);
+    
+  <%- end -%>
 
 </script>

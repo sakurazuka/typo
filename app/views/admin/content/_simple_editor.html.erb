@@ -1,4 +1,6 @@
 <script type="text/javascript">
+  <%- if false -%>
+  <%#=  TODO kick this in JS observer  %>
   $('quicktags').style.display = 'block';
   $('simple_editor').style.display = 'block';
   $('s').className = 'active';
@@ -11,12 +13,15 @@
       typeof(CKEDITOR.instances.article__body_and_extended_editor) == 'object') {
         delete(CKEDITOR.instances.article__body_and_extended_editor);
       }
+      <%- end -%>
   
 </script>
 <%= text_area('article', 'body_and_extended', {:class => 'large', :height => '300px', :rows => '20'}) %>
 <script type="text/javascript">
+  <%- if false -%>
   $('visual_editor').innerHTML = "";
   $('visual_editor').style.display = 'none';
   $('article_body_and_extended').innerHTML = content;
   $('carousel-wrapper').style.display = 'block';
+  <%- end -%>
 </script>

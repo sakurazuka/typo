@@ -7,6 +7,8 @@ class Admin::ContentController < Admin::BaseController
 
   cache_sweeper :blog_sweeper
 
+  EDITOR_MODES = [:simple_editor, :visual_mode]
+
   def auto_complete_for_article_keywords
     @items = Tag.find_with_char(params[:term].strip).to_json
     render :jsoninline => "<%= raw auto_complete_result @items, 'name' %>"
@@ -27,6 +29,7 @@ class Admin::ContentController < Admin::BaseController
 
   def new
     @article = new_article_with_defaults
+    @editor_mode = EDITOR_MODES.include?(params[:editor_mode].try(:to_sym)) ? params[:editor_mode].try(:to_sym) : EDITOR_MODES.first
     load_resources
   end
 
@@ -49,6 +52,7 @@ class Admin::ContentController < Admin::BaseController
 
   def edit
     return unless access_granted?(params[:id])
+    @editor_mode = EDITOR_MODES.includes?(params[:editor_mode].to_sym) ? params[:editor_mode].to_sym : EDITOR_MODES.first
     @article = Article.find(params[:id])
     @article.text_filter ||= current_user.default_text_filter
     @article.keywords = Tag.collection_to_string @article.tags
