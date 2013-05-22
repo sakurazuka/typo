@@ -62,7 +62,7 @@ footer {
 }
 
 .editor-left {
-	margin-right: 340px;
+	margin-right: 320px;
 }
 
 .editor-right {
@@ -179,4 +179,9 @@ label.editor {
 #autocomplete li:hover {
 	color: #00438a;
 	border-bottom: 1px solid #00438a;
+}
+#article_form {
+  float: left;
+  margin-left: 20px;
+  width: 83%;
 }
