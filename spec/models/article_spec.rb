@@ -289,7 +289,7 @@ describe Article do
     t = Time.now
     # We stub the Time.now answer to emulate a sleep of 4. Avoid the sleep. So
     # speed up in test
-    Time.stub!(:now).and_return(t + 5.seconds)
+    Time.stub(:now).and_return(t + 5.seconds)
     Trigger.fire
     art.reload
     assert art.published
@@ -469,14 +469,14 @@ describe Article do
   describe '#comment_url' do
     it 'should render complete url of comment' do
       article = stub_model(Article, :id => 123)
-      article.comment_url.should == "http://myblog.net/comments?article_id=#{article.id}"
+      article.comment_url.should == "/comments?article_id=#{article.id}"
     end
   end
 
   describe '#preview_comment_url' do
     it 'should render complete url of comment' do
       article = stub_model(Article, :id => 123)
-      article.preview_comment_url.should == "http://myblog.net/comments/preview?article_id=#{article.id}"
+      article.preview_comment_url.should == "/comments/preview?article_id=#{article.id}"
     end
   end
 
@@ -589,42 +589,6 @@ describe Article do
         a.should == @a
       end
     end
-  end
-
-  describe "#get_or_build" do
-    context "when nil params given" do
-      before(:each) do
-        @article = Article.get_or_build_article(nil)
-      end
-
-      it "is an Article" do
-        @article.should be_a(Article)
-      end
-
-      context "have blog default value for" do
-        it "allow_comments" do
-          @article.allow_comments.should be == @blog.default_allow_comments
-        end
-
-        it "allow_pings" do
-          @article.allow_pings.should be == @blog.default_allow_pings
-        end
-
-        it "text filter" do
-          @article.text_filter_id.should be_nil
-          @article.text_filter.should be == @blog.text_filter_object
-        end
-      end
-    end
-
-    context "when id params given" do
-      it "should return article" do
-        already_exist_article = FactoryGirl.create(:article)
-        article = Article.get_or_build_article(already_exist_article.id)
-        article.should be == already_exist_article
-      end
-    end
-
   end
 
   describe "#published_comments" do
@@ -854,6 +818,51 @@ describe Article do
       already_seen_article = FactoryGirl.create(:article, published_at: time - 2.hours)
       article = FactoryGirl.create(:article, published_at: time + 2.hours)
       Article.published_since(time).should eq [article]
+    end
+  end
+
+  describe "bestof" do
+    it "returns empty array when no content" do
+      expect(Article.bestof).to be_empty
+    end
+
+    it "returns article with comment count field" do
+      comment = FactoryGirl.create(:comment)
+      article = comment.article
+      expect(Article.bestof.first.comment_count.to_i).to eq 1
+    end
+
+    it "counts comments but not trackbacks" do
+      article = create :article
+      create :trackback, article: article
+      create_list :comment, 2, article: article
+
+      expect(Article.bestof.first.comment_count.to_i).to eq 2
+    end
+
+    it "returns only 5 articles" do
+      6.times { FactoryGirl.create(:comment) }
+      expect(Article.bestof.length).to eq(5)
+    end
+
+    it "returns only published articles" do
+      article = FactoryGirl.create(:article)
+      FactoryGirl.create(:comment, article: article)
+      unpublished_article = FactoryGirl.create(:article, published: false)
+      FactoryGirl.create(:comment, article: unpublished_article)
+      expect(Article.published).to eq([article])
+      expect(Article.bestof).to eq([article])
+    end
+
+    it "returns article sorted by comment counts" do
+      last_article = FactoryGirl.create(:article)
+      FactoryGirl.create(:comment, article: last_article)
+
+      first_article = FactoryGirl.create(:article)
+      FactoryGirl.create(:comment, article: first_article)
+      FactoryGirl.create(:comment, article: first_article)
+
+      expect(Article.bestof).to eq([first_article, last_article])
     end
   end
 end

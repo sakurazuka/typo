@@ -14,10 +14,8 @@ module TypoBlog
     # Setup the cache path
     config.action_controller.page_cache_directory = "#{::Rails.root.to_s}/public/cache/"
     config.cache_store=:file_store, "#{::Rails.root.to_s}/public/cache/"
-
-    # I need the localization plugin to load first
-    # Otherwise, I can't localize plugins <= localization
-    config.plugins = [ :localization, :all ]
+    
+    config.plugins = [ :all ]
 
     config.autoload_paths += %W(
       app/apis
@@ -37,7 +35,11 @@ module TypoBlog
   end
 
   # Load included libraries.
-
+  require 'localization'
+  require 'sidebar'
+  require 'typo_sidebar'
+  require 'typo_textfilters'
+    
   require 'action_web_service'
   ## Required by the plugins themselves.
   # require 'avatar_plugin'
@@ -53,6 +55,7 @@ module TypoBlog
   # require 'spam_protection'
   require 'stateful'
   require 'transforms'
+  require 'typo_time'
   require 'typo_guid'
   ## Required by the plugins themselves.
   # require 'typo_plugins'
@@ -60,7 +63,7 @@ module TypoBlog
   require 'typo_version'
   require 'rails_patch/active_support'
 
-  require "#{Rails.root.to_s}/vendor/plugins/typo_login_system/lib/login_system"
+  require 'typo_login_system'
 
   Date::DATE_FORMATS.merge!(
     :long_weekday => '%a %B %e, %Y %H:%M'

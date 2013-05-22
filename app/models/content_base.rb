@@ -10,16 +10,6 @@ module ContentBase
   attr_accessor :just_changed_published_status
   alias_method :just_changed_published_status?, :just_changed_published_status
 
-  # Grab the text filter for this object.  It's either the filter specified by
-  # self.text_filter_id, or the default specified in the default blog object.
-  def text_filter
-    if self[:text_filter_id] && !self[:text_filter_id].zero?
-      TextFilter.find(self[:text_filter_id])
-    else
-      default_text_filter
-    end
-  end
-
   # Set the text filter for this object.
   def text_filter= filter
     filter_object = filter.to_text_filter
@@ -56,7 +46,7 @@ module ContentBase
   # object.
   def generate_html(field, text = nil)
     text ||= self[field].to_s
-    html = text_filter.filter_text_for_content(blog, text, self) || text
+    html = (text_filter || default_text_filter).filter_text_for_content(blog, text, self) || text
     html_postprocess(field,html).to_s
   end
 
@@ -68,6 +58,19 @@ module ContentBase
 
   def html_map field
     content_fields.include? field
+  end
+
+  def excerpt_text(length = 160)
+    if respond_to?(:excerpt) and (excerpt || "") != ""
+      text = generate_html(:excerpt, excerpt)
+    else
+      text = html(:all)
+    end
+
+    text = text.strip_html
+
+    return text.slice(0, length) +
+      (text.length > length ? '...' : '');
   end
 
   def invalidates_cache?(on_destruction = false)
