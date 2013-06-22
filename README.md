@@ -1,4 +1,4 @@
-This is the test application for learning to use Github, BuildHive, and Heroku!!!
+This is the test application for learning to use Github, Travis CI, and Heroku!!!
 
 ↓↓↓
 Typo
