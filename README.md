@@ -1,3 +1,6 @@
+This is the test application for learning to use Github, BuildHive, and Heroku!!!
+
+↓↓↓
 Typo
 ====
 [![Build Status](https://travis-ci.org/fdv/typo.png)](https://travis-ci.org/fdv/typo)
