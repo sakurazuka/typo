@@ -1,5 +1,9 @@
 language: ruby
 rvm:
   - 1.9.3
+env:
+ - DB=sqlite
+before_script:
+  - rake db:create db:migrate
 gemfile:
   - Gemfile
