@@ -3,8 +3,11 @@ rvm:
   - 1.9.3
 env:
   - DB=sqlite
-  - DB=mysql
 before_script:
   - rake db:create db:migrate
+env:
+  global:
+    secure: |-
+	  AAAAB3NzaC1yc2EAAAADAQABAAABAQDJNUkyquHNYjItnoucEsdUFmnXeQORnNWrILmsA53cIOJHdLJZKavLMNFjOGfVoNah+IV+h74xJKKm/ItLY1RPLbrlJKhgFlsv4AhIZgvcO1bCqH/T+JBLDOrs/jZHFTXShVid5PEkflZkR8X12r47ImJkD62ARd0deC+2JoszwhU9/whHwLef7nCwTyNHM5x4fnv+SnVJcfvVRkVbZNi2rkStXhwoUXqr5eAPEZgZvmQ4GiT7zk3x6PdAQk6Qr79aSgvcK2D1JPhooO7xXZw0oRWtgTesvZGt+H00DNgDKEjXfmIjcKwBFihMd4an1GSDfn+fPs06xdmKaQaSJEGL=
 after_success:
   - script/deploy.sh
